@@ -229,5 +229,6 @@ public static Map<String, Object> getPropertiesMap(Item item) {
 	}
 ```
 4.Demonstracja zmian :
+
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/bookItem.png)
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/electronicItem.png)
