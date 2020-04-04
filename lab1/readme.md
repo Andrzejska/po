@@ -1,4 +1,4 @@
-#Zadanie
+# Zadanie
 
 Do realizacji kart CRC można użyć kreatora online (można również tradycyjnie zrobić to
 na kartkach). W przypadku UML można analogicznie skorzystać z kartki lub wykorzystać
