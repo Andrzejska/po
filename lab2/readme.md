@@ -1,12 +1,12 @@
 # Laboratorium 2
 ## Wprowadzanie zmian w istniejącej aplikacji
 
-### 1.Dodatkowe właściwości dla produktów w poszczególnych kategoriach
+### 1. Dodatkowe właściwości dla produktów w poszczególnych kategoriach
 Rozszerz aplikacje dronka-shop tak, aby na stronie Szczegóły produktu wyświetlała właściwości, specyficzne dla danej kategorii produktów.
 
-1.Najpierw byli stworzone następne clasy -> BookItem, ElectronicItem, SportItem, MusicItem, FoodItem, ktore dziedziczą z klasy Item i zawierają poszczególne dodatkowe atrybuty.
+1. Najpierw byli stworzone następne klasy -> BookItem, ElectronicItem, SportItem, MusicItem, FoodItem, które dziedziczą z klasy Item i zawierają poszczególne dodatkowe atrybuty.
 
-**a)BookItem**
+**a) BookItem**
 ```java
 package pl.edu.agh.dronka.shop.model;
 
@@ -34,7 +34,7 @@ public class BookItem extends Item {
 
 }
 ```
-**b)ElectronicItem**
+**b) ElectronicItem**
 ```java
 package pl.edu.agh.dronka.shop.model;
 
@@ -67,7 +67,7 @@ public class ElectronicItem extends Item {
     public ElectronicItem(){}
 }
 ```
-**c)SportItem**
+**c) SportItem**
 ```java
 package pl.edu.agh.dronka.shop.model;
 
@@ -80,7 +80,7 @@ public class SportItem extends Item {
     public SportItem(){}
 }
 ```
-#### d)MusicItem
+#### d) MusicItem
 ```java
 package pl.edu.agh.dronka.shop.model;
 
@@ -113,7 +113,7 @@ public class MusicItem extends Item{
     public MusicItem(){}
 }
 ```
-**e)FoodItem**
+**e) FoodItem**
 ```java
 package pl.edu.agh.dronka.shop.model;
 
@@ -139,7 +139,7 @@ public class FoodItem extends Item {
     }
 }
 ```
-2.W metodzie **readItems** klasy **shopProvider** zostalo dodane wsczytywanie dodatkowych danych w zależnośći od kategorii.
+2. W metodzie **readItems** klasy **shopProvider** zostalo dodane wsczytywanie dodatkowych danych w zależności od kategorii.
 ```java
 private static List<Item> readItems(CSVReader reader, Category category) {
         List<Item> items = new ArrayList<>();
@@ -228,16 +228,16 @@ public static Map<String, Object> getPropertiesMap(Item item) {
 		return propertiesMap;
 	}
 ```
-4.Demonstracja zmian :
+4. Demonstracja zmian :
 
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/bookItem.png)
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/electronicItem.png)
 
-### 2.Rozszerzenie panelu
+### 2. Rozszerzenie panelu
 Rozszerz panel wyświetlania produktów tak, aby było możliwe filtrowanie produktów po
 właściwościach typu boolean, specyficznych dla danej kategorii.
 
-1.Najpierw był dodany constructor klasy **ItemFilter** który inicjalizował atrybut **itemSpec** w zależności odkategorii. Dodatkowo została zmieniona metoda **appliesTo** która zwracala wynik również wzależności od kategorii podanego Itema.
+1. Najpierw był dodany konstructor klasy **ItemFilter** który inicjalizował atrybut **itemSpec** w zależności od kategorii. Dodatkowo została zmieniona metoda **appliesTo** która zwracała wynik również wzależności od kategorii podanego Itema.
 ```java
 package pl.edu.agh.dronka.shop.model.filter;
 
@@ -311,7 +311,7 @@ public class ItemFilter {
 
 }
 ```
-2.Potem została methoda **fillProperties** dla klasy **PropertiesPanel** która dla poszczególnych kategorij wyświetliazadane checkboxy i wywoła filtr w zależnośći od ich zawartośći.
+2. Potem została metoda **fillProperties** dla klasy **PropertiesPanel** która dla poszczególnych kategorii wyświetla zadane checkboxy i wywoła filtr w zależności od ich zawartości.
 ```java
   public void fillProperties() {
         removeAll();
@@ -382,6 +382,6 @@ public class ItemFilter {
     }
 ```
 
-3.Demonstracja zmian :
+3. Demonstracja zmian :
 
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/electronicCheckBox.png)
