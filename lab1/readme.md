@@ -10,13 +10,13 @@ postaci.</br>
 2. W dowolnej chwili między dwiema postaciami może rozpocząć się walka (załóżmy,
 że walka rozgrywana jest w systemie turowym). Zadawane obrażenia zależne są
 od siły obu postaci. Wynik walki wpływa na doświadczenie obu postaci.</br>
-⋅⋅* Każda postać ma swoją broń (jedną). Zakładamy, że każda broń może zadać
+3. Każda postać ma swoją broń (jedną). Zakładamy, że każda broń może zadać
 pewną ilość obrażeń. Rzeczywiste obrażenia zależne są jednak również od siły obu
 postaci, ale też od elementu losowego - wartości wyrzuconej tradycyjną kostką.
 Dodatkowo, każda postać ma szereg przedmiotów, m.in. takich, które może użyć
 w swojej obronie (zbroja, tarcza).</br>
-3. Obrażenia odniesione przez jedną z postaci można obliczyć z następującego wzoru:  
-      dmgp1 = powerp2 ∗ random ∗ weaponp2 − armorp1 − shieldp1 (1)  
+4. Obrażenia odniesione przez jedną z postaci można obliczyć z następującego wzoru:  
+      **dmgp1 = powerp2 ∗ random ∗ weaponp2 − armorp1 − shieldp1 (1)**  
       dmgp1 - otrzymane obrażenia (w tym przypadku przez gracza 1)  
       powerp2 - siła gracza 2  
       random - współczynnik losowy  
