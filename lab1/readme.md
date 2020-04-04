@@ -30,6 +30,6 @@ uzależniona jest od poziomu many danej postaci. Oczywiście poszczególne czary
 różnią się swoją mocą.</br>
 #### 2. (UML) Proszę przemyśleć i stworzyć ogólny diagram klas, który reprezentuje funkcjonalność modułu z Zadania 1.  
 Należy kolejno:  
-**(a)** Znaleźć możliwie dużo uogólnionych reprezentacji obiektów w systemie (aby potem można było zastosować mechanizmy dziedziczenia    itp.).    
-**(b)** Zapisać metody, które powinny być implementowane przez dane klasy.  
-**(c)** Wprowadzić stosowne powiązania pomiędzy klasami.
+1. Znaleźć możliwie dużo uogólnionych reprezentacji obiektów w systemie (aby potem można było zastosować mechanizmy dziedziczenia    itp.).    
+2. Zapisać metody, które powinny być implementowane przez dane klasy.  
+3. Wprowadzić stosowne powiązania pomiędzy klasami.
