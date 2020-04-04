@@ -232,3 +232,156 @@ public static Map<String, Object> getPropertiesMap(Item item) {
 
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/bookItem.png)
 ![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/electronicItem.png)
+
+### 2.Rozszerzenie panelu
+Rozszerz panel wyświetlania produktów tak, aby było możliwe filtrowanie produktów po
+właściwościach typu boolean, specyficznych dla danej kategorii.
+
+1.Najpierw był dodany constructor klasy **ItemFilter** który inicjalizował atrybut **itemSpec** w zależności odkategorii. Dodatkowo została zmieniona metoda **appliesTo** która zwracala wynik również wzależności od kategorii podanego Itema.
+```java
+package pl.edu.agh.dronka.shop.model.filter;
+
+import pl.edu.agh.dronka.shop.model.*;
+
+public class ItemFilter {
+    private Item itemSpec = new Item();
+
+    public ItemFilter(Category category) {
+        switch (category) {
+            case BOOKS:
+                itemSpec = new BookItem();
+                break;
+            case ELECTRONICS:
+                itemSpec = new ElectronicItem();
+                break;
+            case FOOD:
+                itemSpec = new FoodItem();
+                break;
+            case MUSIC:
+                itemSpec = new MusicItem();
+                break;
+            case SPORT:
+                itemSpec = new SportItem();
+                break;
+        }
+    }
+
+    public Item getItemSpec() {
+        return itemSpec;
+    }
+
+    public boolean appliesTo(Item item) {
+        if (itemSpec.getName() != null
+                && !itemSpec.getName().equals(item.getName())) {
+            return false;
+        }
+        if (itemSpec.getCategory() != null
+                && !itemSpec.getCategory().equals(item.getCategory())) {
+            return false;
+        }
+
+        // applies filter only if the flag (secondHand) is true)
+        if (itemSpec.isSecondhand() && !item.isSecondhand()) {
+            return false;
+        }
+
+        // applies filter only if the flag (polish) is true)
+        if (itemSpec.isPolish() && !item.isPolish()) {
+            return false;
+        }
+        switch (item.getCategory()) {
+            case BOOKS:
+                // applies filter only if the flag (twarda oprawa) is true)
+                if (itemSpec instanceof BookItem && (((BookItem) itemSpec).isHardCover() && !((BookItem) item).isHardCover()))
+                    return false;
+            case ELECTRONICS:
+                // applies filter only if the flag (Gwarancja) is true)
+                if (itemSpec instanceof ElectronicItem && ((ElectronicItem) itemSpec).isGuaranty() && !((ElectronicItem) item).isGuaranty())
+                    return false;
+                // applies filter only if the flag (Mobilny) is true)
+                if (itemSpec instanceof ElectronicItem && ((ElectronicItem) itemSpec).isMobile() && !((ElectronicItem) item).isMobile())
+                    return false;
+            case MUSIC:
+                // applies filter only if the flag (Wideo) is true)
+                if (itemSpec instanceof MusicItem && ((MusicItem) itemSpec).isVideoConnected() && !((MusicItem) item).isVideoConnected())
+                    return false;
+        }
+        return true;
+    }
+
+}
+```
+2.Potem została methoda **fillProperties** dla klasy **PropertiesPanel** która dla poszczególnych kategorij wyświetliazadane checkboxy i wywoła filtr w zależnośći od ich zawartośći.
+```java
+  public void fillProperties() {
+        removeAll();
+        filter= new ItemFilter(shopController.getCurrentCategory());
+        filter.getItemSpec().setCategory(shopController.getCurrentCategory());
+        add(createPropertyCheckbox("Tanie bo polskie", new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                filter.getItemSpec().setPolish(
+                        ((JCheckBox) event.getSource()).isSelected());
+                shopController.filterItems(filter);
+            }
+        }));
+
+        add(createPropertyCheckbox("Używany", new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                filter.getItemSpec().setSecondhand(
+                        ((JCheckBox) event.getSource()).isSelected());
+                shopController.filterItems(filter);
+            }
+        }));
+        switch (filter.getItemSpec().getCategory()) {
+            case ELECTRONICS:
+                add(createPropertyCheckbox("Mobilny", new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        ((ElectronicItem) filter.getItemSpec()).setMobile(
+                                ((JCheckBox) e.getSource()).isSelected());
+                        shopController.filterItems(filter);
+                    }
+                }));
+				add(createPropertyCheckbox("Gwarancja", new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						((ElectronicItem) filter.getItemSpec()).setGuaranty(
+								((JCheckBox) e.getSource()).isSelected());
+						shopController.filterItems(filter);
+					}
+				}));
+				break;
+			case BOOKS:
+				add(createPropertyCheckbox("Twarda oprawa", new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						((BookItem) filter.getItemSpec()).setHardCover(
+								((JCheckBox) e.getSource()).isSelected());
+						shopController.filterItems(filter);
+					}
+				}));
+                break;
+            case MUSIC:
+				add(createPropertyCheckbox("Wideo", new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						((MusicItem) filter.getItemSpec()).setVideoConnected(
+								((JCheckBox) e.getSource()).isSelected());
+						shopController.filterItems(filter);
+					}
+				}));
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + filter.getItemSpec().getCategory());
+        }
+
+    }
+```
+
+3.Demonstracja zmian :
+
+![Image](https://github.com/Andrzejska/OOD/blob/master/lab2/img/electronicCheckBox.png)
