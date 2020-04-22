@@ -390,3 +390,171 @@ public class StandardMazeBuilder implements MazeBuilder {
     }
 }
 ```
+#### 4.Rozszerzenie aplikacji labirynt
+a) Korzystając z powyższych implementacji dodaj prosty mechanizm przemieszczania się po labiryncie.  Po realizacji wcześniejszych zadań pozostaje stworzyć prostą klasę Player,która za pomocą np. strzałek + tekstu w konsoli będzie mogła zadecydować o kierunkuchodzenia. Rozpatrz stosowne warianty rozgrywki (czy ściana ma drzwi przez które możemyprzejść itp. itd.). Wprowadź elementy BombedRoom/BombedWall (rozwiązanie co się wtedystanie zostawiam twórcy. Może być timer, który po 15s bez decyzji zabija gracza etc.).
+
+**a)** Zostala stworzona klasa Player z jednym polem _Room currentRoom_. Pole pokazuję pokój w którym znajduję się gracz. Dodatkowo zostały stworzone metody _move_ (Umożliwie ruch gracza po labiryncie), _status_ (Wypisuję info o pokoju w którym znajduję się gracz) i getter i setter prywatnego pola _currentRoom_ 
+
+Klasa Player:
+```java
+public class Player {
+
+    private Room currentRoom;
+
+    public Player(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+    public void move(Direction dir) {
+        MapSite side = this.currentRoom.getSide(dir);
+        side.Enter();
+        if (side instanceof Door) {
+            this.currentRoom = ((Door) side).getRoomAtOthersSide(currentRoom);
+        }
+    }
+
+    public void status() {
+        System.out.println("Room number: " + this.currentRoom.getRoomNumber());
+        for (Direction dir : Direction.values()) {
+            if (this.currentRoom.getSide(dir) instanceof Door) {
+                System.out.println(dir + " door");
+            } if (this.currentRoom.getSide(dir) instanceof Wall) {
+                System.out.println(dir + " wall");
+            } if (this.currentRoom.getSide(dir) instanceof Room) {
+                System.out.println(dir + " Room");
+            }
+        }
+    }
+
+    public void setCurrentRoom(Room currentRoom) {
+        this.currentRoom = currentRoom;
+    }
+
+    public Room getCurrentRoom() {
+        return this.currentRoom;
+    }
+}
+```
+
+**b)** Została stworzona i dodana do klasy Door dodatkowa metoda _getRoomAtOtherSide(Room firstR)_ która wraca pokój z drugiej strony drzwiej
+
+Klasa Door:
+```java
+public Room getRoomAtOthersSide(Room firstR) {
+        return room1 == firstR ? room2 : room1;
+    }
+```
+
+**c)** Klasa MazeGame została modyfikowana przez dodawanie nowych metod które tworzą cykl gry
+
+Klasa MazeGame:
+```java
+public class MazeGame {
+
+    private Player player;
+
+    private static MazeGame instance;
+
+    public static MazeGame getInstance() {
+        if (instance == null) {
+            instance = new MazeGame();
+        }
+        return instance;
+    }
+
+    public void start() {
+        System.out.println("Enter q to exit the game");
+        System.out.println("Enter w/s/a/d to move player");
+        loop();
+    }
+
+    private void loop() {
+        Scanner scan = new Scanner(System.in);
+        while (true) {
+            player.status();
+            char c = scan.next().charAt(0);
+            switch (c) {
+                case 'w':
+                    this.player.move(North);
+                    break;
+                case 's':
+                    this.player.move(South);
+                    break;
+                case 'a':
+                    this.player.move(West);
+                    break;
+                case 'd':
+                    this.player.move(East);
+                    break;
+                case 'q':
+                    stop();
+                    return;
+                default:
+                    System.out.println("Unknown command: " + c);
+                    break;
+            }
+        }
+    }
+
+    public void stop() {
+        System.out.println("Exiting game...");
+    }
+
+    public void createMaze(StandardMazeBuilder builder, MazeFactory factory) throws Exception {
+        this.player = new Player(buildExampleMaze(builder, factory));
+        Maze maze = builder.getCurrentMaze();
+    }
+
+    private Room buildExampleMaze(StandardMazeBuilder builder, MazeFactory factory) throws Exception {
+        Room[] rooms = new Room[9];
+        for (int i = 0; i < 9; i++) {
+            rooms[i] = factory.createRoom(i);
+            builder.addRoom(rooms[i]);
+        }
+
+        builder.addCommonWall(Direction.East, rooms[0], rooms[1]);
+        builder.addCommonWall(Direction.South, rooms[0], rooms[3]);
+        builder.addCommonWall(Direction.East, rooms[1], rooms[2]);
+        builder.addCommonWall(Direction.South, rooms[1], rooms[4]);
+        builder.addCommonWall(Direction.South, rooms[2], rooms[5]);
+        builder.addCommonWall(Direction.East, rooms[3], rooms[4]);
+        builder.addCommonWall(Direction.South, rooms[3], rooms[6]);
+        builder.addCommonWall(Direction.East, rooms[4], rooms[5]);
+        builder.addCommonWall(Direction.South, rooms[4], rooms[7]);
+        builder.addCommonWall(Direction.South, rooms[5], rooms[8]);
+        builder.addCommonWall(Direction.East, rooms[6], rooms[7]);
+        builder.addCommonWall(Direction.East, rooms[7], rooms[8]);
+
+        builder.addDoor(rooms[0], rooms[1]);
+        builder.addDoor(rooms[1], rooms[2]);
+        builder.addDoor(rooms[2], rooms[5]);
+        builder.addDoor(rooms[4], rooms[5]);
+        builder.addDoor(rooms[4], rooms[7]);
+        builder.addDoor(rooms[7], rooms[8]);
+        builder.addDoor(rooms[6], rooms[7]);
+        builder.addDoor(rooms[3], rooms[6]);
+
+        return rooms[0];
+    }
+}
+```
+
+
+**d)** I na koniec zostałą zmodyfikowana klasa Main w taki sposób, żeby wszystko uruchomiło się
+
+Klasa Main:
+```java
+public class Main {
+    public static void main(String[] args) throws Exception {
+        MazeGame mazeGame = new MazeGame();
+        MazeFactory mazeFactory = MazeFactory.getInstance();
+        StandardMazeBuilder builder = new StandardMazeBuilder(mazeFactory);
+        mazeGame.createMaze(builder, mazeFactory);
+        mazeGame.start();
+    }
+}
+```
+
+**e)** Wynik działania programu
+
+![Result](result.jpg)
