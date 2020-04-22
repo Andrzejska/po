@@ -193,6 +193,26 @@ public class EnchantedDoor extends Door {
 ```
 Klasa EnchantedMazeFactory:
 ```java
+public class EnchantedMazeFactory extends MazeFactory {
+    public EnchantedMazeFactory(){
+        super();    
+    }
+    
+    @Override
+    public Door createDoor(Room r1, Room r2) {
+        return new EnchantedDoor(r1, r2);
+    }
+
+    @Override
+    public Room createRoom(int number) {
+        return new EnchantedRoom(number);
+    }
+
+    @Override
+    public Wall createWall() {
+        return new EnchantedWall();
+    }
+}
 ```
 Została stwórzona klasa **BombedMazeFactory**, która dziedziczy z **MazeFactory** i tworży Bombed-Room/Wall
 
@@ -223,14 +243,18 @@ public class BombedWall extends Wall{
 ```
 Klasa BombedMazeFactory:
 ```java
-public class BombedRoom extends Room {
-    public BombedRoom(int number) {
-        super(number);
+public class BombedMazeFactory extends MazeFactory {
+    public BombedMazeFactory(){
+        super();
+    }   
+    @Override
+    public Room createRoom(int number) {
+        return new BombedRoom(number);
     }
 
     @Override
-    public void Enter() {
-        System.out.println("Entered bombed room");
+    public Wall createWall() {
+        return new BombedWall();
     }
 }
 ```
