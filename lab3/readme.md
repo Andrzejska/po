@@ -118,4 +118,121 @@ public class CountingMazeBuilder implements MazeBuilder {
 ```
 
 #### 2.Fabryka abstrakcyjna:
+**a)** Stwórzona klasa **MazeFactory**, która służy do tworzenia elementów labiryntu.
+```java 
+public class MazeFactory {
+    public Door createDoor(Room r1, Room r2) {
+        return new Door(r1, r2);
+    }
 
+    public Room createRoom(int number) {
+        return new Room(number);
+    }
+
+    public Wall createWall() {
+        return new Wall();
+    }
+}
+```
+
+**b)** Modyfikacja funkcji **createMaze()** tak, aby jako parametr przyjmowała MazeFactory.
+```java
+public Maze createMaze(StandardMazeBuilder builder, MazeFactory factory) throws Exception {
+    Room r1 = new Room(1), r2 = new Room(2);
+    builder.addRoom(r1);
+    builder.addRoom(r2);
+    builder.addCommonWall(North, r1, r2);
+    builder.addDoor(r1, r2);
+    return builder.getCurrentMaze();
+}
+```
+
+**c)** Została stwórzona klasa **EnchantedMazeFactory**, która dziedziczy z **MazeFactory** i tworży Enchanted-Room/Wall/Door
+
+--Klasa EnchantedRoom:
+```java 
+public class EnchantedRoom extends Room {
+    public EnchantedRoom(int number) {
+        super(number);
+    }
+
+    @Override
+    public void Enter() {
+        System.out.println("Entered enchanted room");
+    }
+}
+```
+Klasa EnchantedWall:
+```java
+public class EnchantedWall extends Wall {
+    public EnchantedWall(){
+        super();
+    }
+
+
+    @Override
+
+    public void Enter() {
+        System.out.println("Entered enchanted room");
+    }
+}
+```
+Klasa EnchantedDoor:
+```java
+public class EnchantedDoor extends Door {
+
+    public EnchantedDoor(Room r1, Room r2) {
+        super(r1, r2);
+    }
+
+    @Override
+    public void Enter() {
+        System.out.println("Entered enchanted door");
+    }
+} 
+```
+Klasa EnchantedMazeFactory:
+```java
+```
+Została stwórzona klasa **BombedMazeFactory**, która dziedziczy z **MazeFactory** i tworży Bombed-Room/Wall
+
+--KlasaBombedRoom:
+```java 
+public class BombedRoom extends Room {
+    public BombedRoom(int number) {
+        super(number);
+    }
+
+    @Override
+    public void Enter() {
+        System.out.println("Entered bombed room");
+    }
+}
+```
+Klasa BombedWall:
+```java
+public class BombedWall extends Wall{
+    public BombedWall(){
+        super();
+    }
+    @Override
+    public void Enter() {
+        System.out.println("Entered bombed wall");
+    }
+}
+```
+Klasa BombedMazeFactory:
+```java
+public class BombedRoom extends Room {
+    public BombedRoom(int number) {
+        super(number);
+    }
+
+    @Override
+    public void Enter() {
+        System.out.println("Entered bombed room");
+    }
+}
+```
+
+#### 3.Singleton
