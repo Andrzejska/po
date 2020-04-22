@@ -560,7 +560,7 @@ public class Main {
 
 ![Result](result.jpg)
 
-**a)** Zademonstruj, że MazeFactory faktycznie jest Singletonem (najłatwiej stworzyć przykład,w którym się sprawdza, czy obiekt zwracany przy 2 konstrukcji to faktycznie ten sam, któryzostał stworzony na początku).
+**a)** Zademonstruj, że MazeFactory faktycznie jest Singletonem (najłatwiej stworzyć przykład,w którym się sprawdza, czy obiekt zwracany przy 2 konstrukcji to faktycznie ten sam, który został stworzony na początku).
 
 Została stworzona klasa MazeFactoryTest która testuję działanie metody _getInstance_
 
