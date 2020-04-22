@@ -264,7 +264,7 @@ Wprowadź w powyżej stworzonej implementacji mechanizm, w którym MazeFactory b
 Singletonem. Powinien być on dostępny z pozycji kodu, który jest odpowiedzialny z tworzenie
 poszczególnych części labiryntu.
 
-**a)** Zostali zmodyfikowane wszystkie 'fabryki', żeby tworzyć instanję klasy dawało się tyłko jeden raz.
+**a)** Zostali zmodyfikowani wszystkie 'fabryki', żeby tworzyć instanję klasy dawało się tyłko jeden raz.
 
 Klasa MazeFactory:
 ```java
@@ -340,7 +340,7 @@ public class BombedMazeFactory extends MazeFactory {
     }
 }
 ```
-**b)** Do **StandardMazeBuilder** dodano atrybut **factory** i został zmodyfikowani metody *createDoorBetweenRooms()* i *addRoom()*,
+**b)** Do **StandardMazeBuilder** dodano atrybut **factory** i zostali zmodyfikowani metody *createDoorBetweenRooms()* i *addRoom()*,
 którzy tworzą elementy przy pomocy fabryki.
 ```java
 public class StandardMazeBuilder implements MazeBuilder {
