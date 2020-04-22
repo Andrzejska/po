@@ -1,5 +1,6 @@
 # Laboratorium 3
 ## Wzorce projektowe
+## Autorzy Andrii Trishch, Uladzislau Tumilovich
 
 #### 1. Builder:
 Zdefiniuj nową wersję funkcji składowej createMaze, która będzie przyjmować jako argument
