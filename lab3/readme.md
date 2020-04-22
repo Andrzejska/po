@@ -5,10 +5,7 @@
 Zdefiniuj nową wersję funkcji składowej createMaze, która będzie przyjmować jako argument
 obiekt budujący klasy MazeBuilder.
 
-**a)** Stwórz klasę MazeBuilder, która definiuje interfejs służący do tworzenia labiryntów.
-Co musi tam być zawarte? Wykorzystaj wiedzę nt. składowych, które są w labiryncie
-
-
+**a)** Został stworzony interface **MazeBuilder**, który zawiera wyznacza metody tworzenia poszczególnych element Labiryntu.
 ```java
 public interface MazeBuilder {
     void addRoom(Room room);
@@ -17,11 +14,11 @@ public interface MazeBuilder {
 }
 ```
 
-**b)** Po utworzeniu powyższego interfejsu zmodyfikuj funkcje składową tak, aby przyjmowała jako parametr obiekt tej klasy.
+**b)** Została zmodyfikowaną funkcja składową tak, aby przyjmowała jako parametr obiekt klasy **MazeBuilder**.
 
 ```java
 public class MazeGame {
-    public Maze createMaze(StandardMazeBuilder builder) throws Exception {
+    public Maze createMaze(MazeBuilder builder) throws Exception {
         Room r1 = new Room(1), r2 = new Room(2);
         builder.addRoom(r1);
         builder.addRoom(r2);
@@ -31,7 +28,9 @@ public class MazeGame {
     }
 }
 ```
-**d)**  Stwórz klasę StandardBuilderMaze będącą implementacją MazeBuildera.
+**c)** Zostali wyeliminowani szczegóły tworzenia obiektów. Dana funkcjonalność została przeniesiona na klasy implementujące **MazeBuilder**.
+
+**d)**  Stworzona klasa **StandardMazeBuilder** implementująca interface **MazeBuilder**, dodany atrybut prywatny **currentMaze**.
 ```java
 public class StandardMazeBuilder implements MazeBuilder {
     private Maze currentMaze;
@@ -79,8 +78,8 @@ public class StandardMazeBuilder implements MazeBuilder {
 }
 ```
 
-**e)** Utwórz labirynt przy pomocy operacji createMaze, gdzie parametrem będzie obiekt
-klasy StandardMazeBuilder.
+**e)** Został utworzony labirynt przy pomocy operacji **createMaze()**, gdzie parametrem jest obiekt
+klasy **StandardMazeBuilder**.
 ```java
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -91,9 +90,7 @@ public class Main {
     }
 }
 ```
-**f)** Stwórz kolejną podklasę MazeBuildera o nazwie CountingMazeBuilder. Budowniczy
-tego obiektu w ogóle nie tworzy labiryntu, a jedynie zlicza utworzone komponenty
-różnych rodzajów. Powinien mieć metodę GetCounts, która zwraca ilość elementów
+**f)** Stwórzona kolejną podklasę **MazeBuilder** o nazwie **CountingMazeBuilder**,która zlicza utworzone komponenty różnych rodzajów.
 ```java
 public class CountingMazeBuilder implements MazeBuilder {
     private int elementsNumber = 0;
