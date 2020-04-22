@@ -391,7 +391,7 @@ public class StandardMazeBuilder implements MazeBuilder {
 }
 ```
 #### 4.Rozszerzenie aplikacji labirynt
-a) Korzystając z powyższych implementacji dodaj prosty mechanizm przemieszczania się po labiryncie.  Po realizacji wcześniejszych zadań pozostaje stworzyć prostą klasę Player,która za pomocą np. strzałek + tekstu w konsoli będzie mogła zadecydować o kierunkuchodzenia. Rozpatrz stosowne warianty rozgrywki (czy ściana ma drzwi przez które możemyprzejść itp. itd.). Wprowadź elementy BombedRoom/BombedWall (rozwiązanie co się wtedystanie zostawiam twórcy. Może być timer, który po 15s bez decyzji zabija gracza etc.).
+**a)** Korzystając z powyższych implementacji dodaj prosty mechanizm przemieszczania się po labiryncie.  Po realizacji wcześniejszych zadań pozostaje stworzyć prostą klasę Player,która za pomocą np. strzałek + tekstu w konsoli będzie mogła zadecydować o kierunkuchodzenia. Rozpatrz stosowne warianty rozgrywki (czy ściana ma drzwi przez które możemyprzejść itp. itd.). Wprowadź elementy BombedRoom/BombedWall (rozwiązanie co się wtedystanie zostawiam twórcy. Może być timer, który po 15s bez decyzji zabija gracza etc.).
 
 **a)** Zostala stworzona klasa Player z jednym polem _Room currentRoom_. Pole pokazuję pokój w którym znajduję się gracz. Dodatkowo zostały stworzone metody _move_ (Umożliwie ruch gracza po labiryncie), _status_ (Wypisuję info o pokoju w którym znajduję się gracz) i getter i setter prywatnego pola _currentRoom_ 
 
@@ -558,3 +558,31 @@ public class Main {
 **e)** Wynik działania programu
 
 ![Result](result.jpg)
+
+**a)** Zademonstruj, że MazeFactory faktycznie jest Singletonem (najłatwiej stworzyć przykład,w którym się sprawdza, czy obiekt zwracany przy 2 konstrukcji to faktycznie ten sam, któryzostał stworzony na początku).
+
+Została stworzona klasa MazeFactoryTest która testuję działanie metody _getInstance_
+
+Klasa Main:
+```java
+class MazeFactoryTest {
+
+    @Test
+    void getInstance() {
+        MazeFactory factory = MazeFactory.getInstance();
+
+        assertEquals(factory, MazeFactory.getInstance());
+        assertEquals(factory, MazeFactory.getInstance());
+
+        MazeFactory factory2 = MazeFactory.getInstance();
+
+        assertEquals(factory2, MazeFactory.getInstance());
+        assertEquals(factory2, MazeFactory.getInstance());
+
+        assertEquals(factory, factory2);
+    }
+}
+```
+Poniżej został przedstawiony wynik testów:
+
+![Test](test.jpg)
