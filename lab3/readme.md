@@ -90,7 +90,7 @@ public class Main {
     }
 }
 ```
-**f)** Stwórzona kolejną podklasę **MazeBuilder** o nazwie **CountingMazeBuilder**,która zlicza utworzone komponenty różnych rodzajów.
+**f)** Stwórzona kolejną podklasę **MazeBuilder** o nazwie **CountingMazeBuilder**, która zlicza utworzone komponenty różnych rodzajów.
 ```java
 public class CountingMazeBuilder implements MazeBuilder {
     private int elementsNumber = 0;
@@ -116,4 +116,6 @@ public class CountingMazeBuilder implements MazeBuilder {
     }
 }
 ```
+
+#### 2.Fabryka abstrakcyjna:
 
