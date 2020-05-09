@@ -11,3 +11,6 @@
 ![UML](uml.png)
 
 W odrużnieniu od diagramu podanego na cwiczeniu nasz diagram wyświetlia zależność między klasami **Finder** i **PrisonerDataProvider**/**PersonDatabase**, a nie  asocjacje, bo podane wyszej klasy nie zawierają objektów klasy **Finder**.
+
+#### Krok 2. Poprawa podstawowych blędów:
+
