@@ -215,3 +215,130 @@ public class Finder {
     }
 }
 ```
+
+#### Krok 3. Propozycja generalizacji klas _Person_ i _Prisoner_
+
+Użyliśmy klasy abstrakcyjnej dla generalizacji klas _Person_ i _Prisoner_. Swój wybór uzasadniamy tym, że implementacja większości metod jest dokładnie taka sama i nie ma wielkiego sensu w stosowaniu interfejsu. Nie skorzystaliśmy z interfejsu z metodami domyślnymi bo pola przechowywane w interfejsie muszą być _final static_ co nie jest idealnym rozwiązaniem dla tego przypadku, klasa abstrakcyjna na odwrót, spełnia wszystkie warunki i idealnie pasuje do tego przypadku. Więcej tego, do klasy abstrakcyjnej _Suspect_ dodaliśmy metodę _canBeSuspected_ która jest metodą abstrakcyjną, zrobione to po to, żeby uogólnić klasę _Finder_ i uprościć metodę _displayAllSuspectsWithName_.
+
+**Suspect abstract class**
+````java
+public abstract class Suspect {
+
+    protected String firstName;
+    protected String lastName;
+
+    public String getFirstName() { return this.firstName; }
+
+    public String getLastName() { return this.lastName; }
+
+    public String toString() {
+        return this.firstName + " " + this.lastName;
+    }
+
+    public abstract boolean canBeSuspected();
+}
+````
+
+**Person class**
+````java
+public class Person extends Suspect {
+    private int age;
+
+    public Person(String firstName, String lastName, int age) {
+        this.age = age;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public boolean canBeSuspected() {
+        return age > 18;
+    }
+}
+````
+
+
+**Prisoner class**
+````java
+public class Prisoner extends Suspect {
+    private final int judgementYear;
+    private final int sentenceDuration;
+    private final String pesel;
+
+    public Prisoner(String firstName, String lastName, String pesel, int judgementYear, int sentenceDuration) {
+        this.judgementYear = judgementYear;
+        this.sentenceDuration = sentenceDuration;
+        this.pesel = pesel;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
+    public String getPesel() {
+        return this.pesel;
+    }
+
+    public boolean canBeSuspected() {
+        return judgementYear + sentenceDuration >= getCurrentYear();
+    }
+
+    private int getCurrentYear() {
+        return Calendar.getInstance().get(Calendar.YEAR);
+    }
+}
+````
+
+**Finder class**
+````java
+public class Finder {
+    private final Collection<Person> allPersons;
+
+    private final Map<String, Collection<Prisoner>> allPrisoners;
+
+    public Finder(Collection<Person> allPersons, Map<String, Collection<Prisoner>> allPrisoners) {
+        this.allPersons = allPersons;
+        this.allPrisoners = allPrisoners;
+    }
+
+    public Finder(PersonDatabase personDatabase, PrisonersDatabase prisonersDatabase) {
+        this(personDatabase.getCracovPersons(), prisonersDatabase.getPrisoners());
+    }
+
+    public void displayAllSuspectsWithName(String name) {
+        ArrayList<Suspect> suspectedPersons = new ArrayList<Suspect>();
+
+        for (Collection<Prisoner> prisonerCollection : allPrisoners.values()) {
+            for (Prisoner prisoner : prisonerCollection) {
+                if (!prisoner.canBeSuspected() && prisoner.getFirstName().equals(name)) {
+                    suspectedPersons.add(prisoner);
+                }
+                if (suspectedPersons.size() >= 10) {
+                    break;
+                }
+            }
+            if (suspectedPersons.size() >= 10) {
+                break;
+            }
+        }
+
+        if (suspectedPersons.size() < 10) {
+            for (Person person : allPersons) {
+                if (person.canBeSuspected() && person.getFirstName().equals(name)) {
+                    suspectedPersons.add(person);
+                }
+                if (suspectedPersons.size() >= 10) {
+                    break;
+                }
+            }
+        }
+
+        System.out.println("Znalazlem " + suspectedPersons.size() + " pasujacych podejrzanych!");
+
+        for (Suspect suspect: suspectedPersons) {
+            System.out.println(suspect.toString());
+        }
+    }
+}
+````
