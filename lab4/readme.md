@@ -14,7 +14,7 @@ W odrużnieniu od diagramu podanego na cwiczeniu nasz diagram wyświetlia zależ
 
 #### Krok 2. Poprawa podstawowych blędów:
 
-**a)** Została zmieniona klasa Prisoners. Do atrybutów **firstname**, **lastname** został zmieniony dostęp z *publicznego* na *przywatny*, z czego wynikła potrzeba stworzenia geterów, nazwa metody **display()** na **toString()**, **firstname()** na **getFirstName()**, **middleName** na **getLastName**, czy **MoglbyEwentualnieBycPodejrzany()** na **canBesuspected()**, bo jest ważne pisanie nazw wszystkich metod w jedny jężyku. 
+**a)** Została zmieniona klasa Prisoners. Do atrybutów **firstname**, **lastname** został zmieniony dostęp z *publicznego* na *przywatny*, z czego wynika potrzeba stworzenia _geterów_, nazwa metody **display()** na **toString()**, **firstname()** na **getFirstName()**, **middleName** na **getLastName**, czy **MoglbyEwentualnieBycPodejrzany()** na **canBesuspected()**, bo jest ważne pisanie nazw wszystkich metod w jedny jężyku. 
 
 ```java
 public class Prisoner {
@@ -158,7 +158,7 @@ public class Person {
 }
 ```
 
-**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wynikają z wprowadzonych powyszej modyfikacji. 
+**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wprowadzonych powyszej modyfikacij. 
 ```java
 public class Finder {
     private final Collection<Person> allPersons;
@@ -216,9 +216,9 @@ public class Finder {
 }
 ```
 
-#### Krok 3. Propozycja generalizacji klas _Person_ i _Prisoner_
+#### Krok 3. Propozycja generalizacji klas **Person** i **Prisoner**
 
-Użyliśmy klasy abstrakcyjnej dla generalizacji klas _Person_ i _Prisoner_. Swój wybór uzasadniamy tym, że implementacja większości metod jest dokładnie taka sama i nie ma wielkiego sensu w stosowaniu interfejsu. Nie skorzystaliśmy z interfejsu z metodami domyślnymi bo pola przechowywane w interfejsie muszą być _final static_ co nie jest idealnym rozwiązaniem dla tego przypadku, klasa abstrakcyjna na odwrót, spełnia wszystkie warunki i idealnie pasuje do tego przypadku. Więcej tego, do klasy abstrakcyjnej _Suspect_ dodaliśmy metodę _canBeSuspected_ która jest metodą abstrakcyjną, zrobione to po to, żeby uogólnić klasę _Finder_ i uprościć metodę _displayAllSuspectsWithName_.
+Użyliśmy klasy abstrakcyjnej dla generalizacji klas **Person** i **Prisoner**. Swój wybór uzasadniamy tym, że implementacja większości metod jest dokładnie taka sama i nie ma wielkiego sensu w stosowaniu interfejsu. Nie skorzystaliśmy z interfejsu z metodami domyślnymi bo pola przechowywane w interfejsie muszą być _final static_ co nie jest idealnym rozwiązaniem dla tego przypadku, klasa abstrakcyjna na odwrót, spełnia wszystkie warunki i idealnie pasuje do tego przypadku. Więcej tego, do klasy abstrakcyjnej **Suspect** dodaliśmy metodę **canBeSuspected()** która jest metodą abstrakcyjną, zrobione to po to, żeby uogólnić klasę **Finder** i uprościć metodę **displayAllSuspectsWithName()**.
 
 **Suspect abstract class**
 ````java
