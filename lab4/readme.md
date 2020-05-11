@@ -345,10 +345,227 @@ public class Finder {
 
 #### Krok 4. Iterator:
 
-**a)** Został stworzony interface **SuspectAggregate** z który będą implementować klasy 
+**a)** Został stworzony interface **SuspectAggregate** z który będą implementować klasy **PrisonerDatabase** i **PersonDataBase**.
 ```java
 public interface SuspectAggregate {
     Iterator<Suspect> iterator();
     void generateData();
+}
+```
+**b)** W klasie **PersonDatabase** przenieśliśmy dodanie danych w methode **generateData()**, i zaimplementowana methoda interfejsu. Zwracam iterator kolekcji cracovPersons.
+
+```java
+public class PersonDatabase implements SuspectAggregate {
+
+    private final Collection<Person> cracovPersons = new ArrayList<Person>();
+
+    public PersonDatabase() {
+
+    }
+
+    public void generateData() {
+        addCracovPerson("Jan", "Kowalski", 30);
+        addCracovPerson("Janusz", "Krakowski", 30);
+        addCracovPerson("Janusz", "Mlodociany", 10);
+        addCracovPerson("Kasia", "Kosinska", 19);
+        addCracovPerson("Piotr", "Zgredek", 29);
+        addCracovPerson("Tomek", "Gimbus", 14);
+        addCracovPerson("Janusz", "Gimbus", 15);
+        addCracovPerson("Alicja", "Zaczarowana", 22);
+        addCracovPerson("Janusz", "Programista", 77);
+        addCracovPerson("Pawel", "Pawlowicz", 32);
+        addCracovPerson("Krzysztof", "Mendel", 30);
+    }
+
+    public Collection<Person> getCracovPersons() {
+        return cracovPersons;
+    }
+
+    public void addCracovPerson(String firstName, String lastName, int age) {
+        this.cracovPersons.add(new Person(firstName, lastName, age));
+    }
+
+    @Override
+    public Iterator<Suspect> iterator() {
+        return new SuspectIterator(cracovPersons.iterator());
+    }
+}
+```
+
+**c)** Stworzyłem własny iterator **SuspectIterator**, który przyjmuje iterator kolekcji zawierającej obiekty klasy **Suspect** albo jej klasy dziedziczące.
+
+```java
+public class SuspectIterator implements Iterator<Suspect> {
+    Suspect suspect;
+    Iterator<? extends Suspect> iterator;
+
+    public SuspectIterator(Iterator<? extends Suspect> iterator) {
+        this.iterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public Suspect next() {
+        suspect = iterator.next();
+        if (suspect != null) {
+            return suspect;
+        }
+        throw new NoSuchElementException("There is no such element");
+    }
+}
+```
+
+**d)** W klasie **PrisonersDatabase** zwracam iterator kolekcji wszystkich Prisoner’ów znajdujących się w mapie.
+
+```java
+public class PrisonersDatabase implements SuspectAggregate {
+
+    private final Map<String, Collection<Prisoner>> prisoners = new HashMap<String, Collection<Prisoner>>();
+
+    public PrisonersDatabase() {
+    }
+
+    public void generateData(){
+        addPrisoner("Wiezienie krakowskie", new Prisoner("Jan", "Kowalski", "87080452357", 2005, 7));
+        addPrisoner("Wiezienie krakowskie", new Prisoner("Anita", "Wiercipieta", "84080452357", 2009, 3));
+        addPrisoner("Wiezienie krakowskie", new Prisoner("Janusz", "Zlowieszczy", "92080445657", 2001, 10));
+        addPrisoner("Wiezienie przedmiejskie", new Prisoner("Janusz", "Zamkniety", "802104543357", 2010, 5));
+        addPrisoner("Wiezienie przedmiejskie", new Prisoner("Adam", "Future", "880216043357", 2020, 5));
+        addPrisoner("Wiezienie przedmiejskie", new Prisoner("Zbigniew", "Nienajedzony", "90051452335", 2011, 1));
+        addPrisoner("Wiezienie centralne", new Prisoner("Jan", "Przedziwny", "91103145223", 2009, 4));
+        addPrisoner("Wiezienie centralne", new Prisoner("Janusz", "Podejrzany", "85121212456", 2012, 1));
+    }
+    public Map<String, Collection<Prisoner>> getPrisoners() {
+        return prisoners;
+    }
+
+    public Collection<String> getPrisons() {
+        return prisoners.keySet();
+    }
+
+    public void addPrisoner(String category, Prisoner prisoner) {
+        if (!prisoners.containsKey(category))
+            prisoners.put(category, new ArrayList<Prisoner>());
+        prisoners.get(category).add(prisoner);
+    }
+
+
+    @Override
+    public Iterator<Suspect> iterator() {
+        return new SuspectIterator(prisoners
+                .values()
+                .stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList())
+                .iterator());
+    }
+}
+```
+**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wprowadzonych powyszej modyfikacij. 
+
+```java
+public class Finder {
+    private final SuspectAggregate allPersons;
+    private final SuspectAggregate allPrisoners;
+
+    public Finder(PersonDatabase personDatabase, PrisonersDatabase prisonersDatabase) {
+        this.allPersons = personDatabase;
+        this.allPrisoners = prisonersDatabase;
+    }
+
+    public void displayAllSuspectsWithName(String name) {
+        ArrayList<Suspect> suspectedPersons = new ArrayList<Suspect>();
+        Iterator<? extends Suspect> prisonersIterator = allPrisoners.iterator();
+        Iterator<? extends Suspect> personsIterator = allPersons.iterator();
+
+        Suspect tempSuspect=null;
+        while (prisonersIterator.hasNext()) {
+           tempSuspect = prisonersIterator.next();
+            if (tempSuspect.getFirstName().equals(name) && tempSuspect.canBeSuspected()) {
+                suspectedPersons.add(tempSuspect);
+                if (suspectedPersons.size() >= 10) {
+                    break;
+                }
+            }
+        }
+
+        if (suspectedPersons.size() < 10) {
+            while (personsIterator.hasNext()) {
+                tempSuspect = personsIterator.next();
+                if (tempSuspect.getFirstName().equals(name) && tempSuspect.canBeSuspected()) {
+                    suspectedPersons.add(tempSuspect);
+                    if (suspectedPersons.size() >= 10) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Znalazlem " + suspectedPersons.size() + " pasujacych podejrzanych!");
+
+        for (Suspect suspect: suspectedPersons) {
+            System.out.println(suspect.toString());
+        }
+    }
+```
+
+#### Krok 5. Composite:
+
+**a)** Została stworzona klasa **CompositeAggregate**, dzialianie której polega na zebraniu objektów wszystkich baz, i zwracanie wszystkich objektów w jednej liscie.
+```java
+public class CompositeAggregate implements SuspectAggregate {
+
+    private final List<SuspectAggregate> databases;
+
+    public CompositeAggregate(List<SuspectAggregate> databases) {
+        this.databases = databases;
+    }
+
+    @Override
+    public Iterator<Suspect> iterator() {
+        Collection<Suspect> suspects = new ArrayList<>();
+        databases.forEach(data -> {
+            Iterator<Suspect> iterator = data.iterator();
+            while (iterator.hasNext()) {
+                suspects.add(iterator.next());
+            }
+        });
+        return suspects.iterator();
+    }
+}
+```
+**b)** Modyfikacja klasy Finder. Przez powysze działania, możemy używać tyłko jedną petlę for dla przejścia po wszystkim danym, w niezależności od wejsciowej iłości baz.
+```java
+public class Finder {
+   private final CompositeAggregate compositeAggregate;
+
+    public Finder(CompositeAggregate compositeAggregate) {
+        this.compositeAggregate = compositeAggregate;
+    }
+
+    public void displayAllSuspectsWithName(String name) {
+        ArrayList<Suspect> suspectPeople = new ArrayList<Suspect>();
+        Iterator<Suspect> suspectIterator = compositeAggregate.iterator();
+
+        while (suspectIterator.hasNext()) {
+            Suspect tempSuspect = suspectIterator.next();
+            if (tempSuspect.getFirstName().equals(name) && tempSuspect.canBeSuspected()) {
+                suspectPeople.add(tempSuspect);
+                if (suspectPeople.size() >= 10) {
+                    break;
+                }
+            }
+        }
+
+        System.out.println("Znalazlem " + suspectPeople.size() + " pasujacych podejrzanych!");
+
+        for (Suspect suspect: suspectPeople) {
+            System.out.println(suspect.toString());
+        }
+    }
 }
 ```
