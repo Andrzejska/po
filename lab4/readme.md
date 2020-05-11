@@ -538,7 +538,7 @@ public class CompositeAggregate implements SuspectAggregate {
     }
 }
 ```
-**b)** Modyfikacja klasy Finder. Przez powysze działania, możemy używać tyłko jedną petlę for dla przejścia po wszystkim danym, w niezależności od wejsciowej iłości baz.
+**b)** Modyfikacja klasy **Finder**. Przez powysze działania, możemy używać tyłko jedną petlę for dla przejścia po wszystkim danym, w niezależności od wejsciowej iłości baz.
 ```java
 public class Finder {
    private final CompositeAggregate compositeAggregate;
@@ -569,3 +569,5 @@ public class Finder {
     }
 }
 ```
+
+#### Krok 6. Search Strategy:
