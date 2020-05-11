@@ -10,7 +10,7 @@
 ##### Nasz diagram:
 ![UML](uml.png)
 
-W odrużnieniu od diagramu podanego na cwiczeniu nasz diagram wyświetlia zależność między klasami **Finder** i **PrisonerDataProvider**/**PersonDatabase**, a nie  asocjacje, bo podane wyszej klasy nie zawierają objektów klasy **Finder**.
+W odróżnieniu od diagramu podanego na ćwiczeniu nasz diagram wyświetla zależność między klasami **Finder** i **PrisonerDataProvider**/**PersonDatabase**, a nie asocjacje, bo podane wyżej klasy nie zawierają obiektów klasy **Finder**.
 
 #### Krok 2. Poprawa podstawowych blędów:
 
@@ -96,7 +96,7 @@ public class PrisonersDatabase {
 }
 ```
 
-**c)** Zostala zmieniona nazwa klasy **PersonDataProvider** na **PersonDatabase**. Nazwa List **cracovCitizens**na **cracovPersons**, nazwa metody **getAllCracovCitizens** na **getCracovPersons**, została stworzona metoda **addCracovPerson(firstName,lastName,age)**, żeby zmiejszyc powtorzenie kodu.
+**c)** Zostala zmieniona nazwa klasy **PersonDataProvider** na **PersonDatabase**. Nazwa List **cracovCitizens**na **cracovPersons**, nazwa metody **getAllCracovCitizens** na **getCracovPersons**, została stworzona metoda **addCracovPerson(firstName,lastName,age)**, żeby zmniejszyć powtórzenie kodu. 
 
 ```java
 public class PersonDatabase {
@@ -158,7 +158,7 @@ public class Person {
 }
 ```
 
-**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wprowadzonych powyszej modyfikacij. 
+**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wprowadzonych powyżej modyfikacji.
 ```java
 public class Finder {
     private final Collection<Person> allPersons;
@@ -352,7 +352,7 @@ public interface SuspectAggregate {
     void generateData();
 }
 ```
-**b)** W klasie **PersonDatabase** przenieśliśmy dodanie danych w methode **generateData()**, i zaimplementowana methoda interfejsu. Zwracam iterator kolekcji cracovPersons.
+**b)** W klasie **PersonDatabase** przenieśliśmy dodanie danych w metodę **generateData()**, i zaimplementowana metoda interfejsu. Zwracam iterator kolekcji cracovPersons.
 
 ```java
 public class PersonDatabase implements SuspectAggregate {
@@ -465,7 +465,7 @@ public class PrisonersDatabase implements SuspectAggregate {
     }
 }
 ```
-**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wprowadzonych powyszej modyfikacij. 
+**e)** Została zmieniona klasa **Finder**, zmiany której wynikają z wprowadzonych powyżej modyfikacji.
 
 ```java
 public class Finder {
@@ -538,7 +538,7 @@ public class CompositeAggregate implements SuspectAggregate {
     }
 }
 ```
-**b)** Modyfikacja klasy **Finder**. Przez powysze działania, możemy używać tyłko jedną petlę for dla przejścia po wszystkim danym, w niezależności od wejsciowej iłości baz.
+**b)** Modyfikacja klasy **Finder**. Przez powyżej działania, możemy używać tylko jedną pętle for dla przejścia po wszystkim danym, w niezależności od wejściowej ilości baz.
 ```java
 public class Finder {
    private final CompositeAggregate compositeAggregate;
