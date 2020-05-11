@@ -342,3 +342,13 @@ public class Finder {
     }
 }
 ````
+
+#### Krok 4. Iterator:
+
+**a)** Został stworzony interface **SuspectAggregate** z który będą implementować klasy 
+```java
+public interface SuspectAggregate {
+    Iterator<Suspect> iterator();
+    void generateData();
+}
+```
