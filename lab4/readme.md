@@ -571,3 +571,226 @@ public class Finder {
 ```
 
 #### Krok 6. Search Strategy:
+
+**a)** Został stworzony interfejs **SearchStrategy**
+```java
+public interface SearchStrategy {
+    boolean filter(Suspect suspect);
+}
+```
+
+**b)** Następnie została stworzona klasa **NameSearchStrategy**, która implementuje interfejs **SearchStrategy**
+````java
+public class NameSearchStrategy implements SearchStrategy {
+
+    private String name;
+
+    public NameSearchStrategy(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean filter(Suspect suspect) {
+        return suspect.getFirstName().equals(this.name);
+    }
+}
+````
+
+**c)** Analogicznie do klasy **NameSearchStrategy** została stworzona klasa **AgeSearchStrategy**. W metodzie filter sprawdzamy czy obiekt typu _suspect_ jest instancji Person, bo klasa Prisoner nie zawiera pola age.
+````java
+public class AgeSearchStrategy implements SearchStrategy {
+
+    private int age;
+
+    public AgeSearchStrategy(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public boolean filter(Suspect suspect) {
+        if (suspect instanceof Person) {
+            return this.age == ((Person) suspect).getAge();
+        }
+        return false;
+    }
+}
+````
+
+**c)** Dalej została stworona klasa **CompositeSearchStrategy**, która zawiera listę obiektów implementujących interfejs **SearchStrategy**
+````java
+public class CompositeSearchStrategy implements SearchStrategy {
+
+    private final List<SearchStrategy> filters;
+
+    public CompositeSearchStrategy(List<SearchStrategy> filters) {
+        this.filters = filters;
+    }
+
+    @Override
+    public boolean filter(Suspect suspect) {
+        return filters.stream().allMatch(s -> s.filter(suspect));
+    }
+}
+````
+
+**d)** Została zmieniona klasa **SuspectIterator** w taki sposób, żeby umożliwić filtrowanie dannych odrazu w tej klasie
+````java
+public class SuspectIterator implements Iterator<Suspect> {
+
+    Suspect suspect;
+    Iterator<? extends Suspect> iterator;
+    SearchStrategy searchStrategy;
+
+    public SuspectIterator(Iterator<? extends Suspect> iterator, SearchStrategy searchStrategy) {
+        this.iterator = iterator;
+        this.searchStrategy = searchStrategy;
+    }
+
+    @Override
+    public boolean hasNext() {
+        while (iterator.hasNext()) {
+            Suspect tempSuspect = iterator.next();
+            if (searchStrategy.filter(tempSuspect) && tempSuspect.canBeSuspected()) {
+                suspect = tempSuspect;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Suspect next() {
+        if (suspect != null) {
+            return suspect;
+        }
+        throw new NoSuchElementException("There is no such element");
+    }
+}
+````
+
+**e)** Natępnie został zmodyfikowany interfejs **SuspectAggregate** oraz zostały poprawione wszystkie pozostałe klasy **CompositeAggregate**, **PersonDatabase**, **PrisonersDatabase**), którę są od niego zależne
+````java
+public interface SuspectAggregate {
+    Iterator<Suspect> iterator(SearchStrategy searchStrategy);
+}
+````
+
+**f)** Została zmodyfikowana klasa **Finder** w której zostałą stworzona metoda display, która przyjmuje obiekt instancji _SearchStrategy_ oraz wypisuje pofiltrowane dane
+````java
+public class Finder {
+   private final CompositeAggregate compositeAggregate;
+
+    public Finder(CompositeAggregate compositeAggregate) {
+        this.compositeAggregate = compositeAggregate;
+    }
+
+    public void display(SearchStrategy searchStrategy) {
+        ArrayList<Suspect> suspectPeople = new ArrayList<Suspect>();
+        Iterator<Suspect> suspectIterator = compositeAggregate.iterator(searchStrategy);
+
+        while (suspectIterator.hasNext()) {
+           suspectPeople.add(suspectIterator.next());
+        }
+
+        System.out.println("Znalazlem " + suspectPeople.size() + " pasujacych podejrzanych!");
+
+        for (Suspect suspect: suspectPeople) {
+            System.out.println(suspect.toString());
+        }
+    }
+}
+````
+
+**g)** Na koniec zostały stworzone dwie klasy **Student** oraz **StudentDatabase** zgodnie ze schematem proponowanym w instrukcji
+````java
+public class Student extends Suspect {
+    private String index;
+
+    public Student(String firstName, String lastName, String index) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.index = index;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public boolean canBeSuspected() {
+        return true;
+    }
+}
+````
+
+````java
+public class StudentDatabase implements SuspectAggregate {
+
+    private final Collection<Student> students = new ArrayList<Student>();
+
+    public StudentDatabase() {
+    }
+
+    @Override
+    public Iterator<Suspect> iterator(SearchStrategy searchStrategy) {
+        return new SuspectIterator(students.iterator(), searchStrategy);
+    }
+
+    public void generateInitialData() {
+        addStudent("Bronislaw", "Filan", "403432");
+        addStudent("Wandelin", "Kosman", "347634");
+        addStudent("Remigiusz", "Pelka", "675476");
+        addStudent("Konstantyn", "Kaszuba", "236523");
+        addStudent("Denis", "Kukulski", "867522");
+        addStudent("Konstanty", "Krasny", "563465");
+        addStudent("Janusz", "Rojewski", "234543");
+        addStudent("Albert", "Mikel", "763465");
+        addStudent("Janusz", "Rogowski", "346434");
+        addStudent("Denis", "Pawlowicz", "764534");
+        addStudent("Bronislaw", "Mendel", "565465");
+    }
+
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void addStudent(String firstName, String lastName, String index) {
+        students.add(new Student(firstName, lastName, index));
+    }
+}
+````
+
+**h)** Zostało przykładowe wywołanie programu w klasie **Application**
+````java
+public class Application {
+
+    public static void main(String[] args) {
+        PersonDatabase personDatabase = new PersonDatabase();
+        personDatabase.generateInitialData();
+        PrisonersDatabase prisonerDatabase = new PrisonersDatabase();
+        prisonerDatabase.generateInitialData();
+        StudentDatabase studentDatabase = new StudentDatabase();
+        studentDatabase.generateInitialData();
+
+        List<SuspectAggregate> databases = new ArrayList<>();
+        databases.add(personDatabase);
+        databases.add(prisonerDatabase);
+        databases.add(studentDatabase);
+
+        Finder suspects = new Finder(new CompositeAggregate(databases));
+
+        List<SearchStrategy> strategies = new ArrayList<>();
+        strategies.add(new NameSearchStrategy("Janusz"));
+        strategies.add(new AgeSearchStrategy(77));
+
+        suspects.display(new CompositeSearchStrategy(strategies));
+    }
+}
+````
+
+**h)** Resultat przykładowego wywółania programu
+
+![result](result.png)
+
+**i)** Resultat wywołania testów
+
+![test](test.png)
