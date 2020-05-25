@@ -121,7 +121,7 @@ public class Order {
 }
 ```
 
-**b)** Została zmodyfikowana klasa **OrderTest**, zmiany winikają z zmiany *product* z objektu do listy *List<product>* 
+**b)** Została zmodyfikowana klasa **OrderTest**, zmiany winikają z zmiany *product* z objektu **Product** do listy **List&ltProduct&gt** 
 ```java
 public class OrderTest {
 ...
