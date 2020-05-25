@@ -1,6 +1,6 @@
 # Laboratorium 5
 ## Testy jednostkowe
-## Autorzy Andrii Trishch, Uladzislau Tumilovich
+## Autorzy: Andrii Trishch, Uladzislau Tumilovich
 
 #### Krok 1. Diagram UML:
 
