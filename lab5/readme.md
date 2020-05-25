@@ -43,4 +43,4 @@ public class Order {
 
 **c)** Po uruchomieniu wszystkich testów
 
-![tests results](img/test1.png)
+![tests results](img/test1.jpg)
