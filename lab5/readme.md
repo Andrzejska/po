@@ -342,18 +342,11 @@ public class Product {
 }
 ```
 
-**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian
+**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian.  
+Dodane testy:
+* **getProductDiscount()**- sprawdza poprawność przypisania zniżki.
+* **getProductWithDiscount()**- sprawdza poprawność wyliczonej ceny z rabatem.
 ```java
-package pl.edu.agh.internetshop;
-
-import org.junit.jupiter.api.Test;
-
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static pl.edu.agh.internetshop.util.CustomAssertions.assertBigDecimalCompareValue;
-
-
 public class ProductTest {
 
     private static final String NAME = "Mr. Sparkle";
