@@ -47,7 +47,6 @@ public class Order {
 
 **a)** Została wprowadzona modyfikacja API klasy **Order** w taki spośob, żeby przechowywać i zwracać liste produktów
 
-
 ```java
 public class Order {
     private static final BigDecimal TAX_VALUE = BigDecimal.valueOf(1.23);
@@ -122,3 +121,51 @@ public class Order {
 }
 ```
 
+**b)** Została zmodyfikowana klasa **OrderTest**, zmiany winikają z zmiany *product* z objektu do listy *List<product>* 
+```java
+public class OrderTest {
+...
+
+    private Order getOrderWithMockedProduct() {
+        Product product = mock(Product.class);
+        return new Order(Collections.singletonList(product));
+    }
+
+    @Test
+    public void testGetProductThroughOrder() {
+        // given
+        Product expectedProduct = mock(Product.class);
+        Order order = new Order(Collections.singletonList(expectedProduct));
+
+        // when
+        List<Product> actualProducts = order.getProducts();
+
+        // then
+        assertSame(expectedProduct, actualProducts.get(0));
+    }
+
+    @Test
+    public void testGetPrice() throws Exception {
+        // given
+        BigDecimal expectedProductPrice = BigDecimal.valueOf(1000);
+        Product product = mock(Product.class);
+        given(product.getPrice()).willReturn(expectedProductPrice);
+        Order order = new Order(Collections.singletonList(product));
+
+        // when
+        BigDecimal actualProductPrice = order.getPrice();
+
+        // then
+        assertBigDecimalCompareValue(expectedProductPrice, actualProductPrice);
+    }
+
+    @Test
+    private Order getOrderWithCertainProductPrice(double productPriceValue) {
+        BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
+        Product product = mock(Product.class);
+        given(product.getPrice()).willReturn(productPrice);
+        return new Order(Collections.singletonList(product));
+    }
+	...
+}
+```
