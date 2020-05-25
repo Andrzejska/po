@@ -254,8 +254,8 @@ public class Order {
 
 ![tests results](img/test2.jpg)
 
-**d)** Dodano poszczegółne testy do **OrderTest**:  
-* **getMultipleProdutFromOrder** - sprawdza czy rzeczywiście przekazane **List&lt;Product&gt;**
+**d)** Dodano poszczególne testy do **OrderTest**:  
+* **getMultipleProdutFromOrder** -sprawdza czy rzeczywiście przekazane **List&lt;Product&gt;** określoną dlugość
 ```java
  @Test
 	public void testGetMultipleProductFromOrder() {
@@ -292,7 +292,7 @@ public class Order {
 	}
 ```
 
-**e)** Został zmieniony constructor klasy **Order** dla sprawdzania poszczególwnych warunków
+**e)** Został zmieniony konstructor klasy **Order** dla sprawdzania poszczególnych warunków
 ```java
     public Order(List<Product> products) {
         products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
