@@ -410,7 +410,7 @@ public class ProductTest {
 **c)** Po uruchomieniu wszystkich testów **ProductTest**
 ![tests results](img/test3.jpg)
 
-**b)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcja _getPriceWithDiscount()_ i _getPriceWithProductDiscount()_
+**d)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcja _getPriceWithDiscount()_ i _getPriceWithProductDiscount()_
 ```java
 public class Order {
     private static final BigDecimal TAX_VALUE = BigDecimal.valueOf(1.23);
@@ -508,3 +508,21 @@ public class Order {
     }
 }
 ```
+
+**e)** Zostały dopasowane testy do wprowadzonych powyżej zmian, został zmieniony sposób tworzenia **Order** przez wzmiany wprowadzone w kontruktorze.
+```java
+public class OrderTest {
+    private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
+    private Order getOrderWithCertainProductPrice(double productPriceValue) {
+        BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
+        Product product = mock(Product.class);
+        given(product.getPrice()).willReturn(productPrice);
+        given(product.getPriceWithDiscount()).willReturn(productPrice);
+        return new Order(Collections.singletonList(product),DISCOUNT);
+    }
+
+}
+```
+
+**f)** Po uruchomieniu wszystkich testów **OrderTest**
+![tests results](img/test3-1.jpg)
