@@ -235,7 +235,7 @@ public class Order {
     }
 
     public void send() {
-        boolean sentSuccesful = getShipmentMethod().send(shipment, shipment.getSenderAddress(), 				shipment.getRecipientAddress());
+        boolean sentSuccesful = getShipmentMethod().send(shipment, shipment.getSenderAddress(),shipment.getRecipientAddress());
         shipment.setShipped(sentSuccesful);
     }
 
@@ -250,6 +250,8 @@ public class Order {
 }
 ```
 
-**c)** Po uruchomieniu wszystkich testów
+**e)** Po uruchomieniu wszystkich testów
 
 ![tests results](img/test2.jpg)
+
+**d)** Dodano poszczegółne testy
