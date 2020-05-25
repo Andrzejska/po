@@ -341,3 +341,170 @@ public class Product {
     }
 }
 ```
+
+**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian
+```java
+package pl.edu.agh.internetshop;
+
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static pl.edu.agh.internetshop.util.CustomAssertions.assertBigDecimalCompareValue;
+
+
+public class ProductTest {
+
+    private static final String NAME = "Mr. Sparkle";
+    private static final BigDecimal PRICE = BigDecimal.valueOf(1);
+    private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
+
+    @Test
+    public void testProductName() throws Exception {
+        // given
+
+        // when
+        Product product = new Product(NAME, PRICE, DISCOUNT);
+
+        // then
+        assertEquals(NAME, product.getName());
+    }
+
+    @Test
+    public void testProductPrice() throws Exception {
+        // given
+
+        // when
+        Product product = new Product(NAME, PRICE, PRICE);
+
+        // then
+        assertBigDecimalCompareValue(product.getPrice(), PRICE);
+    }
+
+    @Test
+    public void getProductDiscount() throws Exception {
+        // given
+        BigDecimal discount = BigDecimal.valueOf(0.05);
+
+        // when
+        Product product = new Product(NAME, PRICE, discount);
+
+        // then
+        assertBigDecimalCompareValue(product.getDiscount(), discount);
+    }
+
+    @Test
+    public void getProductPriceWithDiscount() throws Exception {
+        // given
+
+        // when
+        Product product = new Product(NAME, PRICE, BigDecimal.valueOf(0.1));
+
+        // then
+        assertBigDecimalCompareValue(product.getPriceWithDiscount(), BigDecimal.valueOf(0.9));
+    }
+}
+```
+
+**c)** Po uruchomieniu wszystkich testów **ProductTest**
+![tests results](img/test3.jpg)
+
+**b)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcja _getPriceWithDiscount()_ i _getPriceWithProductDiscount()_
+```java
+public class Order {
+    private static final BigDecimal TAX_VALUE = BigDecimal.valueOf(1.23);
+    private final UUID id;
+    private final List<Product> products;
+    private boolean paid;
+    private Shipment shipment;
+    private ShipmentMethod shipmentMethod;
+    private PaymentMethod paymentMethod;
+    private final BigDecimal discount;
+
+    public Order(List<Product> products, BigDecimal discount) {
+        this.products = Objects.requireNonNull(products, "product cannot be null");
+        this.products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
+        id = UUID.randomUUID();
+        paid = false;
+        this.discount = discount;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public boolean isSent() {
+        return shipment != null && shipment.isShipped();
+    }
+
+    public boolean isPaid() { return paid; }
+
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public BigDecimal getPrice() {
+        BigDecimal price = BigDecimal.valueOf(0.0);
+        for (Product product: products) {
+            price = price.add(product.getPrice());
+        }
+        return price;
+    }
+
+    public BigDecimal getPriceWithProductDiscount(){
+        BigDecimal price = BigDecimal.valueOf(0.0);
+        for (Product product: products) {
+            price = price.add(product.getPriceWithDiscount());
+        }
+        return price;
+    }
+
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }
+
+    public BigDecimal getPriceWithDiscount() {
+        return getPriceWithProductDiscount().subtract(getPriceWithProductDiscount().multiply(discount)).setScale(Product.PRICE_PRECISION, Product.ROUND_STRATEGY);
+    }
+
+    public BigDecimal getPriceWithTaxes() {
+        return getPriceWithDiscount().multiply(TAX_VALUE).setScale(Product.PRICE_PRECISION, Product.ROUND_STRATEGY);
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public ShipmentMethod getShipmentMethod() {
+        return shipmentMethod;
+    }
+
+    public void setShipmentMethod(ShipmentMethod shipmentMethod) {
+        this.shipmentMethod = shipmentMethod;
+    }
+
+    public void send() {
+        boolean sentSuccesful = getShipmentMethod().send(shipment, shipment.getSenderAddress(), shipment.getRecipientAddress());
+        shipment.setShipped(sentSuccesful);
+    }
+
+    public void pay(MoneyTransfer moneyTransfer) {
+        moneyTransfer.setCommitted(getPaymentMethod().commit(moneyTransfer));
+        paid = moneyTransfer.isCommitted();
+    }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
+}
+```
