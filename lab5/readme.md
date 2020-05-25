@@ -121,7 +121,7 @@ public class Order {
 }
 ```
 
-**b)** Została zmodyfikowana klasa **OrderTest**, zmiany winikają z zmiany *product* z objektu **Product** do listy **List&ltProduct&gt** 
+**b)** Została zmodyfikowana klasa **OrderTest**, zmiany winikają z zmiany *product* z objektu **Product** do listy **List&lt;Product&gt;** 
 ```java
 public class OrderTest {
 ...
@@ -254,4 +254,54 @@ public class Order {
 
 ![tests results](img/test2.jpg)
 
-**d)** Dodano poszczegółne testy
+**d)** Dodano poszczegółne testy do **OrderTest**:  
+* **getMultipleProdutFromOrder** - sprawdza czy rzeczywiście przekazane **List&lt;Product&gt;**
+```java
+ @Test
+	public void testGetMultipleProductFromOrder() {
+    	// given
+		Product expectedProduct = mock(Product.class);
+		Product expectedProduct1 = mock(Product.class);
+
+		// when
+		Order order=new Order(Arrays.asList(expectedProduct,expectedProduct1));
+
+		// then
+		assertSame(expectedProduct,order.getProducts().get(0));
+		assertSame(expectedProduct1,order.getProducts().get(1));
+		assertEquals(2,order.getProducts().size());
+	}
+```
+* **productsListIsNull** -sprawdza czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista mieści product jaki jest **NULL**-em
+```java
+@Test
+	public void listProductIsNull() {
+		// given
+		List<Product> products = Arrays.asList(mock(Product.class), null);
+
+		// when then
+		assertThrows(NullPointerException.class, () -> new Order(products));
+	}
+```
+* **listProductIsNull**- sprawdza czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista jest **NULL**-em
+```java
+	@Test
+	public void productsListIsNull() {
+		// when then
+		assertThrows(NullPointerException.class, () -> new Order(null));
+	}
+```
+
+**e)** Został zmieniony constructor klasy **Order** dla sprawdzania poszczególwnych warunków
+```java
+    public Order(List<Product> products) {
+        products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
+        this.products = Objects.requireNonNull(products, "products list cannot be null");
+        id = UUID.randomUUID();
+        paid = false;
+    }
+```
+
+**f)** Po uruchomieniu wszystkich testów **OrderTest**
+
+![tests results](img/test2-1.jpg)
