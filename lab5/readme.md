@@ -407,7 +407,8 @@ public class ProductTest {
 }
 ```
 
-**c)** Po uruchomieniu wszystkich testów **ProductTest**
+**c)** Po uruchomieniu wszystkich testów **ProductTest**  
+
 ![tests results](img/test3.jpg)
 
 **d)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcja _getPriceWithDiscount()_ i _getPriceWithProductDiscount()_
@@ -524,5 +525,6 @@ public class OrderTest {
 }
 ```
 
-**f)** Po uruchomieniu wszystkich testów **OrderTest**
+**f)** Po uruchomieniu wszystkich testów **OrderTest**  
+
 ![tests results](img/test3-1.jpg)
