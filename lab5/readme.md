@@ -344,8 +344,8 @@ public class Product {
 
 **b)** Zostały dopasowane testy do wprowadzonych powyżej zmian.  
 Dodane testy:
-* **getProductDiscount()**- sprawdza poprawność przypisania zniżki.
-* **getProductWithDiscount()**- sprawdza poprawność wyliczonej ceny z rabatem.
+* _getProductDiscount_- sprawdza poprawność przypisania zniżki.
+* _getProductWithDiscount()_- sprawdza poprawność wyliczonej ceny z rabatem.
 ```java
 public class ProductTest {
 
@@ -406,10 +406,10 @@ public class ProductTest {
 
 **d)**  
 1. Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcji  
-* _getPriceWithDiscount()_ - oblicza wartość zamówienia z zniżką  
-* _getPriceWithProductDiscount()_ - oblicza wartość zamówienia z zniżką na poszczególne produkty  
+* _getPriceWithDiscount()_- oblicza wartość zamówienia z zniżką  
+* _getPriceWithProductDiscount()_- oblicza wartość zamówienia z zniżką na poszczególne produkty  
 2. Zmieniono funkcje
-* _getPriceWithTaxes()_ - oblicza wartość zamównie z zniżką i podatkiem. 
+* _getPriceWithTaxes()_- oblicza wartość zamównie z zniżką i podatkiem. 
 
 ```java
 public class Order {
@@ -463,21 +463,104 @@ public class Order {
 }
 ```
 
-**e)** Zostały dopasowane testy do wprowadzonych powyżej zmian, został zmieniony sposób tworzenia **Order** przez wzmiany wprowadzone w kontruktorze.
+**e)** Zostały dopasowane testy do wprowadzonych powyżej zmian, został zmieniony sposób tworzenia **Order** przez wzmiany wprowadzone w kontruktorze.  
+
+1. **Dodanę mocki:** 
+
+* **getOrderWithCertainProductPrice** - zwraca order z produktem o zadanej wartości  
 ```java
-public class OrderTest {
-    private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
-    private Order getOrderWithCertainProductPrice(double productPriceValue) {
+  private Order getOrderWithCertainProductPrice(double productPriceValue) {
         BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
         Product product = mock(Product.class);
         given(product.getPrice()).willReturn(productPrice);
         given(product.getPriceWithDiscount()).willReturn(productPrice);
         return new Order(Collections.singletonList(product),DISCOUNT);
-    }
+	}
+```
 
+* **getOrderWithCertainProductPriceDiscount** -zwraca order z produktem o zadanej wartości z zadaną zniżką
+```java
+ private Order getOrderWithCertainProductPriceDiscount(double productPriceValue, double productDiscountValue) {
+		BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
+		BigDecimal productDiscount = BigDecimal.valueOf(productDiscountValue);
+		Product product = mock(Product.class);
+		given(product.getPrice()).willReturn(productPrice);
+		given(product.getPriceWithDiscount()).willReturn(productPrice.subtract(productPrice.multiply(productDiscount)));
+		return new Order(Collections.singletonList(product), DISCOUNT);
+	}
+```
+
+2. **Dodanę testy:**
+
+* **getDiscount**- sprawdza poprawność przypisania rabatu
+```java
+@Test
+	public void getDiscount() {
+		// given
+
+		// when
+		Order order = getOrderWithMockedProduct();
+
+		// then
+		assertBigDecimalCompareValue(DISCOUNT, order.getDiscount());
+	}
 }
 ```
 
+* **getPriceWithProductDiscount**- sprawdza poprawność obliczenia sumy poszczegółnych produktów z zniżką
+```java
+@Test
+	public void getPriceWithProductDiscount() {
+		// given
+		Product product = mock(Product.class);
+		Product product1 = mock(Product.class);
+
+		BigDecimal expectedOrderPrice = BigDecimal.valueOf(1.7);
+
+		given(product.getPriceWithDiscount()).willReturn(BigDecimal.valueOf(0.9));
+		given(product1.getPriceWithDiscount()).willReturn(BigDecimal.valueOf(0.8));
+
+		// when
+		Order order = new Order(Arrays.asList(product, product1), DISCOUNT);
+
+		// then
+		assertBigDecimalCompareValue(expectedOrderPrice, order.getPriceWithProductDiscount());
+	}
+```
+
+* **getPriceWithTaxes**- sprawdza poprawność obliczenia sumy zamówięnia z zniżką i podatkiem.
+```java
+@Test
+	public void getPriceWithTaxes() {
+		double productPriceValue=1000;
+		double productDiscountValue=0.10;
+		Order order=getOrderWithCertainProductPriceDiscount(productPriceValue,productDiscountValue);
+		BigDecimal expectedFinalPrice=BigDecimal.valueOf(productPriceValue).subtract(BigDecimal.valueOf(productPriceValue*productDiscountValue)).multiply(BigDecimal.valueOf(1.23));
+		System.out.println(order.getPriceWithDiscount());
+		assertBigDecimalCompareValue(order.getPriceWithTaxes(),expectedFinalPrice);
+	}
+```
+
+* **getPriceWithMultiplyProducts**- sprawdza czy zwrucona suma dla dwóch produktów jest poprawna.
+```java 
+@Test
+	public void getPriceWithMultiplyProducts(){
+		// given
+		Product product = mock(Product.class);
+		Product product1 = mock(Product.class);
+
+		BigDecimal expectedProductPrice = BigDecimal.valueOf(1500);
+
+		given(product.getPrice()).willReturn(BigDecimal.valueOf(1000));
+		given(product1.getPrice()).willReturn(BigDecimal.valueOf(500));
+
+		// when
+		Order order = new Order(Arrays.asList(product, product1), DISCOUNT);
+
+		//then
+		assertBigDecimalCompareValue(expectedProductPrice, order.getPrice());
+	}
+```
 **f)** Po uruchomieniu wszystkich testów **OrderTest**  
 
 ![tests results](img/test3-1.jpg)
