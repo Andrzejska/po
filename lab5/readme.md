@@ -565,3 +565,138 @@ public void getPriceWithMultiplyProducts(){
 ![tests results](img/test3-1.jpg)
 
 #### Krok 4. Dodanie historii zamówień:  
+
+**a)** Został stworzony interfejs SearchStrategy
+```java
+public interface SearchStrategy {
+    boolean filter(Order order);
+}
+```
+**b)** Następnie została stworzona klasa **ProductNameSearchStrategy**, która implementuje interfejs **SearchStrategy**
+```java
+public class ProductNameSearchStrategy implements SearchStrategy {
+
+    String name;
+
+    public ProductNameSearchStrategy(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public boolean filter(Order order) {
+        List<Product> products = order.getProducts();
+        for (Product p : products) if (p.getName() == this.name) return true;
+        return false;
+    }
+}
+```
+
+**c)** Analogicznie do klasy **ProductNameSearchStrategy** została stworzona klasa **TotalPriceSearchStrategy**. 
+```java
+public class TotalPriceSearchStrategy implements SearchStrategy {
+    BigDecimal price;
+
+    public TotalPriceSearchStrategy(BigDecimal price) {
+        this.price = price;
+    }
+
+    @Override
+    public boolean filter(Order order) {
+        System.out.println(order.getPriceWithTaxes());
+        return order.getPriceWithTaxes().compareTo(this.price) == 0;
+    }
+}
+```
+
+**d)** i klasa **PayersSurnameSearchStrategy**
+```java
+public class PayersSurnameSearchStrategy implements SearchStrategy {
+    String payersSurname;
+
+    public PayersSurnameSearchStrategy(String payersSurname) {
+        this.payersSurname = payersSurname;
+    }
+
+    @Override
+    public boolean filter(Order order) {
+        return order.getOrdersPayerSurname()==this.payersSurname;
+    }
+}
+```
+
+**e)** Została stworzona klasa  **CompositeSearchStrategy** która pozwalia na filtrowanie zamowień po więcej niż jedenym parametru.  
+```java
+public class CompositeSearchStrategy implements SearchStrategy {
+    private final List<SearchStrategy> filters;
+
+    public CompositeSearchStrategy(List<SearchStrategy> filters) {
+        this.filters = filters;
+    }
+
+    @Override
+    public boolean filter(Order order) {
+        return filters.stream().allMatch(f->f.filter(order));
+    }
+}
+```
+
+**d)** Zostala stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień.
+```java 
+public class OrdersHistory {
+
+
+    private List<Order> pastOrders;
+
+    public OrdersHistory(List<Order> pastOrders) {
+        this.pastOrders = pastOrders;
+    }
+    public void addOrder(Order o){
+        this.pastOrders.add(o);
+    }
+
+    public List<Order> getPastOrders() {
+        return pastOrders;
+    }
+
+    public void setPastOrders(List<Order> pastOrders) {
+        this.pastOrders = pastOrders;
+    }
+
+    public List<Order> getFilteredOrders(SearchStrategy searchStrategy){
+        List<Order> resultList=new ArrayList<>();
+        for(Order o:pastOrders) if(searchStrategy.filter(o)) resultList.add(o);
+        return resultList;
+    }
+}
+```
+
+**e)** ГРУПОВОЙ ТЕСТ ВЛАДОСЯН С ТЕБЯ ПОЩЕГУЛЬНЕ ТЕСТЫ
+```java
+class OrdersHistoryTest {
+    private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
+    @Test
+    void getFilteredOrders() {
+        //given
+        Product p=new Product("Apple", BigDecimal.valueOf(250),DISCOUNT);
+        Product p1=new Product("Egg", BigDecimal.valueOf(200),DISCOUNT);
+        Product p2=new Product("Milk", BigDecimal.valueOf(350),DISCOUNT);
+        Product p3=new Product("Water", BigDecimal.valueOf(200),DISCOUNT);
+
+        Order order=new Order(Arrays.asList(p,p1,p2,p3),DISCOUNT,"Trishch");
+        Order order1=new Order(Arrays.asList(p,p2),DISCOUNT,"Tumilovich");
+        Order order2=new Order(Arrays.asList(p3,p1),DISCOUNT,"Trishch");
+
+        SearchStrategy s=new ProductNameSearchStrategy("Apple");
+        SearchStrategy s1=new PayersSurnameSearchStrategy("Trishch");
+        SearchStrategy s2=new TotalPriceSearchStrategy(BigDecimal.valueOf(738));
+
+        CompositeSearchStrategy cs=new CompositeSearchStrategy(Arrays.asList(s,s1));
+        OrdersHistory oh=new OrdersHistory(Arrays.asList(order,order1,order2));
+        //when
+        assertEquals(oh.getFilteredOrders(cs).size(),1);
+        assertEquals(oh.getFilteredOrders(s).size(),2);
+        assertEquals(oh.getFilteredOrders(s2).size(),1);
+
+    }
+}
+```
