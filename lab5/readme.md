@@ -45,7 +45,7 @@ public class Order {
 
 #### Krok 2. Rozszerzenie funkcjalności systemu:
 
-**a)** Została wprowadzona modyfikacja API klasy **Order** w taki spośob, żeby przechowywać i zwracać liste produktów
+**a)** Została wprowadzona modyfikacja API klasy **Order** w taki sposób, żeby przechowywać i zwracać listę produktów.
 
 ```java
 public class Order {
@@ -121,10 +121,12 @@ public class Order {
 }
 ```
 
-**b)** Została zmodyfikowana klasa **OrderTest**, zmiany winikają z zmiany *product* z objektu **Product** do listy **List&lt;Product&gt;** 
+Została zmodyfikowana klasa **OrderTest**, zmiany wynikają ze zmiany pola *product* z obiektu klasy **Product** do listy **List Product**
+	
 ```java
 public class OrderTest {
-...
+
+    ...
 
     private Order getOrderWithMockedProduct() {
         Product product = mock(Product.class);
@@ -158,15 +160,8 @@ public class OrderTest {
         // then
         assertBigDecimalCompareValue(expectedProductPrice, actualProductPrice);
     }
-
-    @Test
-    private Order getOrderWithCertainProductPrice(double productPriceValue) {
-        BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
-        Product product = mock(Product.class);
-        given(product.getPrice()).willReturn(productPrice);
-        return new Order(Collections.singletonList(product));
-    }
-	...
+    
+    ...
 }
 ```
 
@@ -255,24 +250,24 @@ public class Order {
 ![tests results](img/test2.jpg)
 
 **e)** Dodano poszczególne testy do **OrderTest**:  
-* **getMultipleProdutFromOrder** -sprawdza czy rzeczywiście przekazane **List&lt;Product&gt;** określoną dlugość
+* **getMultipleProdutFromOrder** -sprawdza, czy rzeczywiście przekazane **List Product** określoną dlugość.
 ```java
- @Test
-public void testGetMultipleProductFromOrder() {
+@Test
+public void getMultipleProductFromOrder() {
 	// given
 	Product expectedProduct = mock(Product.class);
 	Product expectedProduct1 = mock(Product.class);
 
 	// when
-	Order order=new Order(Arrays.asList(expectedProduct,expectedProduct1));
+	Order order = new Order(Arrays.asList(expectedProduct, expectedProduct1));
 
 	// then
-	assertSame(expectedProduct,order.getProducts().get(0));
-	assertSame(expectedProduct1,order.getProducts().get(1));
-	assertEquals(2,order.getProducts().size());
+	assertSame(expectedProduct, order.getProducts().get(0));
+	assertSame(expectedProduct1, order.getProducts().get(1));
+	assertEquals(order.getProducts().size(), order.getProducts().size());
 }
 ```
-* **productsListIsNull** -sprawdza czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista mieści product jaki jest **NULL**-em
+* **productsListIsNull** -sprawdza, czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista mieści product, jaki jest **null**-em.
 ```java
 @Test
 public void listProductIsNull() {
@@ -283,7 +278,7 @@ public void listProductIsNull() {
 	assertThrows(NullPointerException.class, () -> new Order(products));
 }
 ```
-* **listProductIsNull**- sprawdza czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista jest **NULL**-em
+* **listProductIsNull** - sprawdza, czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista jest **null**-em.
 ```java
 @Test
 public void productsListIsNull() {
@@ -292,7 +287,7 @@ public void productsListIsNull() {
 }
 ```
 
-**f)** Został zmieniony konstructor klasy **Order** dla sprawdzania poszczególnych warunków
+**f)** Został zmieniony konstruktor klasy **Order** dla sprawdzania poszczególnych warunków.
 ```java
 public Order(List<Product> products) {
 	products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
@@ -342,13 +337,12 @@ public class Product {
 }
 ```
 
-**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian.  
+**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian.
 Dodane testy:
 * _getProductDiscount_- sprawdza poprawność przypisania zniżki.
 * _getProductWithDiscount()_- sprawdza poprawność wyliczonej ceny z rabatem.
 ```java
 public class ProductTest {
-
     private static final String NAME = "Mr. Sparkle";
     private static final BigDecimal PRICE = BigDecimal.valueOf(1);
     private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
@@ -409,25 +403,24 @@ public class ProductTest {
 * _getPriceWithDiscount()_- oblicza wartość zamówienia z zniżką  
 * _getPriceWithProductDiscount()_- oblicza wartość zamówienia z zniżką na poszczególne produkty  
 2. Zmieniono funkcje
-* _getPriceWithTaxes()_- oblicza wartość zamównie z zniżką i podatkiem. 
+* _getPriceWithTaxes()_- oblicza wartość zamównie ze zniżką i podatkiem. 
 
 ```java
 public class Order {
     private static final BigDecimal TAX_VALUE = BigDecimal.valueOf(1.23);
-    private final UUID id;
+	private final UUID id;
     private final List<Product> products;
     private boolean paid;
     private Shipment shipment;
     private ShipmentMethod shipmentMethod;
     private PaymentMethod paymentMethod;
-    private final BigDecimal discount;
+    private BigDecimal discount;
 
-    public Order(List<Product> products, BigDecimal discount) {
+    public Order(List<Product> products) {
         this.products = Objects.requireNonNull(products, "product cannot be null");
-        this.products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
+        this.products.forEach((p) -> Objects.requireNonNull(p,"product cannot be null"));
         id = UUID.randomUUID();
         paid = false;
-        this.discount = discount;
     }
 
     public BigDecimal getPrice() {
@@ -438,7 +431,7 @@ public class Order {
         return price;
     }
 
-    public BigDecimal getPriceWithProductDiscount(){
+    public BigDecimal getPriceWithProductDiscount() {
         BigDecimal price = BigDecimal.valueOf(0.0);
         for (Product product: products) {
             price = price.add(product.getPriceWithDiscount());
@@ -446,63 +439,104 @@ public class Order {
         return price;
     }
 
-
-    public BigDecimal getDiscount() {
-        return discount;
-    }
-
     public BigDecimal getPriceWithDiscount() {
-        return getPriceWithProductDiscount().subtract(getPriceWithProductDiscount().multiply(discount)).setScale(Product.PRICE_PRECISION, Product.ROUND_STRATEGY);
+        if (discount != null) {
+            return getPriceWithProductDiscount()
+                    .subtract(getPriceWithProductDiscount().multiply(discount)
+                    .setScale(Product.PRICE_PRECISION, Product.ROUND_STRATEGY));
+        }
+        return getPriceWithProductDiscount();
     }
 
     public BigDecimal getPriceWithTaxes() {
         return getPriceWithDiscount().multiply(TAX_VALUE).setScale(Product.PRICE_PRECISION, Product.ROUND_STRATEGY);
     }
 
-    ...
+    public void send() {
+        boolean sentSuccessful = getShipmentMethod().send(shipment, shipment.getSenderAddress(), shipment.getRecipientAddress());
+        shipment.setShipped(sentSuccessful);
+    }
+
+    public void pay(MoneyTransfer moneyTransfer) {
+        moneyTransfer.setCommitted(getPaymentMethod().commit(moneyTransfer));
+        paid = moneyTransfer.isCommitted();
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public boolean isSent() {
+        return shipment != null && shipment.isShipped();
+    }
+
+    public boolean isPaid() { return paid; }
+
+    public void setShipment(Shipment shipment) {
+        this.shipment = shipment;
+    }
+
+    public Shipment getShipment() {
+        return shipment;
+    }
+
+    public void setDiscount(BigDecimal discount) { this.discount = discount; }
+
+    public BigDecimal getDiscount() {
+        return discount;
+    }    
+
+    public void setPaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public PaymentMethod getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setShipmentMethod(ShipmentMethod shipmentMethod) {
+        this.shipmentMethod = shipmentMethod;
+    }
+
+    public ShipmentMethod getShipmentMethod() {
+        return shipmentMethod;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
 }
 ```
 
-**e)** Zostały dopasowane testy do wprowadzonych powyżej zmian, został zmieniony sposób tworzenia **Order** przez wzmiany wprowadzone w kontruktorze.  
+**e)** Zostały dopasowane testy do wprowadzonych powyżej zmian.
 
-1. **Dodanę mocki:** 
-
-* **getOrderWithCertainProductPrice** - zwraca order z produktem o zadanej wartości  
-```java
-private Order getOrderWithCertainProductPrice(double productPriceValue) {
-	BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
-	Product product = mock(Product.class);
-	given(product.getPrice()).willReturn(productPrice);
-	given(product.getPriceWithDiscount()).willReturn(productPrice);
-	return new Order(Collections.singletonList(product),DISCOUNT);
-}
-```
-
-* **getOrderWithCertainProductPriceDiscount** -zwraca order z produktem o zadanej wartości z zadaną zniżką
-```java
-private Order getOrderWithCertainProductPriceDiscount(double productPriceValue, double productDiscountValue) {
-	BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
-	BigDecimal productDiscount = BigDecimal.valueOf(productDiscountValue);
-	Product product = mock(Product.class);
-	given(product.getPrice()).willReturn(productPrice);
-	given(product.getPriceWithDiscount()).willReturn(productPrice.subtract(productPrice.multiply(productDiscount)));
-	return new Order(Collections.singletonList(product), DISCOUNT);
-}
-```
-
-2. **Dodanę testy:**
-
-* **getDiscount**- sprawdza poprawność przypisania rabatu
+* **setDiscount** - sprawdza poprawność przypisania rabatu.
 ```java
 @Test
-public void getDiscount() {
+public void setDiscount() throws Exception {
 	// given
+	Order order = getOrderWithMockedProduct();
+	BigDecimal expectedDiscount = BigDecimal.valueOf(0.05);
 
 	// when
-	Order order = getOrderWithMockedProduct();
+	order.setDiscount(expectedDiscount);
 
 	// then
-	assertBigDecimalCompareValue(DISCOUNT, order.getDiscount());
+	assertBigDecimalCompareValue(expectedDiscount, order.getDiscount());
+}
+```
+
+* **getDiscountWithoutSetting** - sprawdza poprawność zwracanego rabatu bez jego wcześniejszego przypisania
+```java
+@Test
+public void getDiscountWithoutSetting() throws Exception {
+	// given
+	Order order = getOrderWithMockedProduct();
+
+	// when
+
+	// then
+	assertNull(order.getDiscount());
 }
 ```
 
@@ -625,7 +659,7 @@ public class PayersSurnameSearchStrategy implements SearchStrategy {
 }
 ```
 
-**e)** Została stworzona klasa  **CompositeSearchStrategy** która pozwalia na filtrowanie zamowień po więcej niż jedenym parametru.  
+**e)** Została stworzona klasa **CompositeSearchStrategy** która pozwala na filtrowanie zamówień po więcej niż jednym parametru.
 ```java
 public class CompositeSearchStrategy implements SearchStrategy {
     private final List<SearchStrategy> filters;
@@ -641,7 +675,7 @@ public class CompositeSearchStrategy implements SearchStrategy {
 }
 ```
 
-**d)** Zostala stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień, a też otrzymania wszystkich zamówień w zależności od wybranego filtru(-ów).
+**d)** Została stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień, a też otrzymania wszystkich zamówień w zależności od wybranego filtr (-ów).
 ```java 
 public class OrdersHistory {
 
@@ -671,7 +705,7 @@ public class OrdersHistory {
 }
 ```
 
-[!!!!] ГРУПОВОЙ ТЕСТ ВЛАДОСЯН С ТЕБЯ ПОЩЕГУЛЬНЕ ТЕСТЫ И СБРОСИТЬ ПЛИКИ ЖРУДЛОВЕ
+**d)** Została stworzona klasa **OrdersHistoryTest** dla testowana klasy **OrdersHistory**
 ```java
 class OrdersHistoryTest {
     private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
