@@ -404,7 +404,12 @@ public class ProductTest {
 
 ![tests results](img/test3.jpg)
 
-**d)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcja _getPriceWithDiscount()_ i _getPriceWithProductDiscount()_
+**d)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcji  
+* _getPriceWithDiscount()_ - oblicza wartość zamówienia z zniżką  
+* _getPriceWithProductDiscount()_ - oblicza wartość zamówienia z zniżką na poszczególne produkty  
+Zmieniono funkcje
+* _getPriceWithTaxes()_ - oblicza wartość zamównie z zniżką i podatkiem. 
+
 ```java
 public class Order {
     private static final BigDecimal TAX_VALUE = BigDecimal.valueOf(1.23);
@@ -422,28 +427,6 @@ public class Order {
         id = UUID.randomUUID();
         paid = false;
         this.discount = discount;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public boolean isSent() {
-        return shipment != null && shipment.isShipped();
-    }
-
-    public boolean isPaid() { return paid; }
-
-    public Shipment getShipment() {
-        return shipment;
     }
 
     public BigDecimal getPrice() {
@@ -475,31 +458,7 @@ public class Order {
         return getPriceWithDiscount().multiply(TAX_VALUE).setScale(Product.PRICE_PRECISION, Product.ROUND_STRATEGY);
     }
 
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public ShipmentMethod getShipmentMethod() {
-        return shipmentMethod;
-    }
-
-    public void setShipmentMethod(ShipmentMethod shipmentMethod) {
-        this.shipmentMethod = shipmentMethod;
-    }
-
-    public void send() {
-        boolean sentSuccesful = getShipmentMethod().send(shipment, shipment.getSenderAddress(), shipment.getRecipientAddress());
-        shipment.setShipped(sentSuccesful);
-    }
-
-    public void pay(MoneyTransfer moneyTransfer) {
-        moneyTransfer.setCommitted(getPaymentMethod().commit(moneyTransfer));
-        paid = moneyTransfer.isCommitted();
-    }
-
-    public void setShipment(Shipment shipment) {
-        this.shipment = shipment;
-    }
+    ...
 }
 ```
 
