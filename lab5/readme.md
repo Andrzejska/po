@@ -671,7 +671,7 @@ public class OrdersHistory {
 }
 ```
 
-**e)** ГРУПОВОЙ ТЕСТ ВЛАДОСЯН С ТЕБЯ ПОЩЕГУЛЬНЕ ТЕСТЫ
+[!!!!] ГРУПОВОЙ ТЕСТ ВЛАДОСЯН С ТЕБЯ ПОЩЕГУЛЬНЕ ТЕСТЫ И СБРОСИТЬ ПЛИКИ ЖРУДЛОВЕ
 ```java
 class OrdersHistoryTest {
     private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
