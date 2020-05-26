@@ -1,4 +1,4 @@
-# object-oriented-design
+# Object-oriented-design
 This repo contains solutions to various tasks related to object-oriented design, realized during the Computer Science course at AGH UST.
 
 * [CRC Card & UML](lab1)
