@@ -258,48 +258,48 @@ public class Order {
 * **getMultipleProdutFromOrder** -sprawdza czy rzeczywiście przekazane **List&lt;Product&gt;** określoną dlugość
 ```java
  @Test
-	public void testGetMultipleProductFromOrder() {
-    	// given
-		Product expectedProduct = mock(Product.class);
-		Product expectedProduct1 = mock(Product.class);
+public void testGetMultipleProductFromOrder() {
+	// given
+	Product expectedProduct = mock(Product.class);
+	Product expectedProduct1 = mock(Product.class);
 
-		// when
-		Order order=new Order(Arrays.asList(expectedProduct,expectedProduct1));
+	// when
+	Order order=new Order(Arrays.asList(expectedProduct,expectedProduct1));
 
-		// then
-		assertSame(expectedProduct,order.getProducts().get(0));
-		assertSame(expectedProduct1,order.getProducts().get(1));
-		assertEquals(2,order.getProducts().size());
-	}
+	// then
+	assertSame(expectedProduct,order.getProducts().get(0));
+	assertSame(expectedProduct1,order.getProducts().get(1));
+	assertEquals(2,order.getProducts().size());
+}
 ```
 * **productsListIsNull** -sprawdza czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista mieści product jaki jest **NULL**-em
 ```java
 @Test
-	public void listProductIsNull() {
-		// given
-		List<Product> products = Arrays.asList(mock(Product.class), null);
+public void listProductIsNull() {
+	// given
+	List<Product> products = Arrays.asList(mock(Product.class), null);
 
-		// when then
-		assertThrows(NullPointerException.class, () -> new Order(products));
-	}
+	// when then
+	assertThrows(NullPointerException.class, () -> new Order(products));
+}
 ```
 * **listProductIsNull**- sprawdza czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista jest **NULL**-em
 ```java
-	@Test
-	public void productsListIsNull() {
-		// when then
-		assertThrows(NullPointerException.class, () -> new Order(null));
-	}
+@Test
+public void productsListIsNull() {
+	// when then
+	assertThrows(NullPointerException.class, () -> new Order(null));
+}
 ```
 
 **f)** Został zmieniony konstructor klasy **Order** dla sprawdzania poszczególnych warunków
 ```java
-    public Order(List<Product> products) {
-        products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
-        this.products = Objects.requireNonNull(products, "products list cannot be null");
-        id = UUID.randomUUID();
-        paid = false;
-    }
+public Order(List<Product> products) {
+	products.forEach((p)->Objects.requireNonNull(p,"product cannot be null"));
+	this.products = Objects.requireNonNull(products, "products list cannot be null");
+	id = UUID.randomUUID();
+	paid = false;
+}
 ```
 
 **g)** Po uruchomieniu wszystkich testów **OrderTest**
@@ -469,25 +469,25 @@ public class Order {
 
 * **getOrderWithCertainProductPrice** - zwraca order z produktem o zadanej wartości  
 ```java
-  private Order getOrderWithCertainProductPrice(double productPriceValue) {
-        BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
-        Product product = mock(Product.class);
-        given(product.getPrice()).willReturn(productPrice);
-        given(product.getPriceWithDiscount()).willReturn(productPrice);
-        return new Order(Collections.singletonList(product),DISCOUNT);
-	}
+private Order getOrderWithCertainProductPrice(double productPriceValue) {
+	BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
+	Product product = mock(Product.class);
+	given(product.getPrice()).willReturn(productPrice);
+	given(product.getPriceWithDiscount()).willReturn(productPrice);
+	return new Order(Collections.singletonList(product),DISCOUNT);
+}
 ```
 
 * **getOrderWithCertainProductPriceDiscount** -zwraca order z produktem o zadanej wartości z zadaną zniżką
 ```java
- private Order getOrderWithCertainProductPriceDiscount(double productPriceValue, double productDiscountValue) {
-		BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
-		BigDecimal productDiscount = BigDecimal.valueOf(productDiscountValue);
-		Product product = mock(Product.class);
-		given(product.getPrice()).willReturn(productPrice);
-		given(product.getPriceWithDiscount()).willReturn(productPrice.subtract(productPrice.multiply(productDiscount)));
-		return new Order(Collections.singletonList(product), DISCOUNT);
-	}
+private Order getOrderWithCertainProductPriceDiscount(double productPriceValue, double productDiscountValue) {
+	BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
+	BigDecimal productDiscount = BigDecimal.valueOf(productDiscountValue);
+	Product product = mock(Product.class);
+	given(product.getPrice()).willReturn(productPrice);
+	given(product.getPriceWithDiscount()).willReturn(productPrice.subtract(productPrice.multiply(productDiscount)));
+	return new Order(Collections.singletonList(product), DISCOUNT);
+}
 ```
 
 2. **Dodanę testy:**
@@ -495,71 +495,70 @@ public class Order {
 * **getDiscount**- sprawdza poprawność przypisania rabatu
 ```java
 @Test
-	public void getDiscount() {
-		// given
+public void getDiscount() {
+	// given
 
-		// when
-		Order order = getOrderWithMockedProduct();
+	// when
+	Order order = getOrderWithMockedProduct();
 
-		// then
-		assertBigDecimalCompareValue(DISCOUNT, order.getDiscount());
-	}
+	// then
+	assertBigDecimalCompareValue(DISCOUNT, order.getDiscount());
 }
 ```
 
 * **getPriceWithProductDiscount**- sprawdza poprawność obliczenia sumy poszczegółnych produktów z zniżką
 ```java
 @Test
-	public void getPriceWithProductDiscount() {
-		// given
-		Product product = mock(Product.class);
-		Product product1 = mock(Product.class);
+public void getPriceWithProductDiscount() {
+	// given
+	Product product = mock(Product.class);
+	Product product1 = mock(Product.class);
 
-		BigDecimal expectedOrderPrice = BigDecimal.valueOf(1.7);
+	BigDecimal expectedOrderPrice = BigDecimal.valueOf(1.7);
 
-		given(product.getPriceWithDiscount()).willReturn(BigDecimal.valueOf(0.9));
-		given(product1.getPriceWithDiscount()).willReturn(BigDecimal.valueOf(0.8));
+	given(product.getPriceWithDiscount()).willReturn(BigDecimal.valueOf(0.9));
+	given(product1.getPriceWithDiscount()).willReturn(BigDecimal.valueOf(0.8));
 
-		// when
-		Order order = new Order(Arrays.asList(product, product1), DISCOUNT);
+	// when
+	Order order = new Order(Arrays.asList(product, product1), DISCOUNT);
 
-		// then
-		assertBigDecimalCompareValue(expectedOrderPrice, order.getPriceWithProductDiscount());
-	}
+	// then
+	assertBigDecimalCompareValue(expectedOrderPrice, order.getPriceWithProductDiscount());
+}
 ```
 
 * **getPriceWithTaxes**- sprawdza poprawność obliczenia sumy zamówięnia z zniżką i podatkiem.
 ```java
 @Test
-	public void getPriceWithTaxes() {
-		double productPriceValue=1000;
-		double productDiscountValue=0.10;
-		Order order=getOrderWithCertainProductPriceDiscount(productPriceValue,productDiscountValue);
-		BigDecimal expectedFinalPrice=BigDecimal.valueOf(productPriceValue).subtract(BigDecimal.valueOf(productPriceValue*productDiscountValue)).multiply(BigDecimal.valueOf(1.23));
-		System.out.println(order.getPriceWithDiscount());
-		assertBigDecimalCompareValue(order.getPriceWithTaxes(),expectedFinalPrice);
-	}
+public void getPriceWithTaxes() {
+	double productPriceValue=1000;
+	double productDiscountValue=0.10;
+	Order order=getOrderWithCertainProductPriceDiscount(productPriceValue,productDiscountValue);
+	BigDecimal expectedFinalPrice=BigDecimal.valueOf(productPriceValue).subtract(BigDecimal.valueOf(productPriceValue*productDiscountValue)).multiply(BigDecimal.valueOf(1.23));
+	System.out.println(order.getPriceWithDiscount());
+	assertBigDecimalCompareValue(order.getPriceWithTaxes(),expectedFinalPrice);
+}
 ```
 
 * **getPriceWithMultiplyProducts**- sprawdza czy zwrucona suma dla dwóch produktów jest poprawna.
 ```java 
 @Test
-	public void getPriceWithMultiplyProducts(){
-		// given
-		Product product = mock(Product.class);
-		Product product1 = mock(Product.class);
+public void getPriceWithMultiplyProducts(){
+	// given
+	Product product = mock(Product.class);
+	Product product1 = mock(Product.class);
 
-		BigDecimal expectedProductPrice = BigDecimal.valueOf(1500);
+	BigDecimal expectedProductPrice = BigDecimal.valueOf(1500);
 
-		given(product.getPrice()).willReturn(BigDecimal.valueOf(1000));
-		given(product1.getPrice()).willReturn(BigDecimal.valueOf(500));
+	given(product.getPrice()).willReturn(BigDecimal.valueOf(1000));
+	given(product1.getPrice()).willReturn(BigDecimal.valueOf(500));
 
-		// when
-		Order order = new Order(Arrays.asList(product, product1), DISCOUNT);
+	// when
+	Order order = new Order(Arrays.asList(product, product1), DISCOUNT);
 
-		//then
-		assertBigDecimalCompareValue(expectedProductPrice, order.getPrice());
-	}
+	//then
+	assertBigDecimalCompareValue(expectedProductPrice, order.getPrice());
+}
 ```
 **f)** Po uruchomieniu wszystkich testów **OrderTest**  
 
