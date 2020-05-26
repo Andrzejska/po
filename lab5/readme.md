@@ -404,10 +404,12 @@ public class ProductTest {
 
 ![tests results](img/test3.jpg)
 
-**d)**  Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcji  
+**d)**
+1. Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcji  
 * _getPriceWithDiscount()_ - oblicza wartość zamówienia z zniżką  
 * _getPriceWithProductDiscount()_ - oblicza wartość zamówienia z zniżką na poszczególne produkty  
-Zmieniono funkcje
+
+2.Zmieniono funkcje
 * _getPriceWithTaxes()_ - oblicza wartość zamównie z zniżką i podatkiem. 
 
 ```java
