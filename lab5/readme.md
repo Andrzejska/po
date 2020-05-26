@@ -566,13 +566,14 @@ public void getPriceWithMultiplyProducts(){
 
 #### Krok 4. Dodanie historii zamówień:  
 
-**a)** Został stworzony interfejs SearchStrategy
+**a)** Został stworzony interfejs **SearchStrategy**
 ```java
 public interface SearchStrategy {
     boolean filter(Order order);
 }
 ```
-**b)** Następnie została stworzona klasa **ProductNameSearchStrategy**, która implementuje interfejs **SearchStrategy**
+
+**b)** Następnie została stworzona klasa **ProductNameSearchStrategy**, która implementuje interfejs **SearchStrategy** i realizuję zadaną logikę filtrowania.
 ```java
 public class ProductNameSearchStrategy implements SearchStrategy {
 
@@ -640,7 +641,7 @@ public class CompositeSearchStrategy implements SearchStrategy {
 }
 ```
 
-**d)** Zostala stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień.
+**d)** Zostala stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień, a też otrzymania wszystkich zamówień w zależności od wybranego filtru(-ów).
 ```java 
 public class OrdersHistory {
 
