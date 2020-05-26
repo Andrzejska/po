@@ -563,3 +563,5 @@ public void getPriceWithMultiplyProducts(){
 **f)** Po uruchomieniu wszystkich testów **OrderTest**  
 
 ![tests results](img/test3-1.jpg)
+
+#### Krok 4. Dodanie historii zamówień:  
