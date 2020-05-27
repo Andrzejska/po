@@ -45,7 +45,7 @@ public class Order {
 
 #### Krok 2. Rozszerzenie funkcjalności systemu:
 
-**a)** Została wprowadzona modyfikacja API klasy **Order** w taki sposób, żeby przechowywać i zwracać listę produktów.
+**a)** W klasie **Order** zostało usunięte pole _product_ oraz zostały zmienione wszystkie metody, które korzystają z tego pola w taki sposób, żeby w przyszłości mogły one pracować z listą produktów.
 
 ```java
 public class Order {
@@ -165,7 +165,7 @@ public class OrderTest {
 }
 ```
 
-**c)** Następnie została zmodyfikowana klasa **Order** w taki spośob, żeby przechodziły już wcześniej poprawione testy
+**c)** Następnie została zmodyfikowana klasa **Order** w taki sposób, żeby przechodziły już wcześniej poprawione testy.
 
 ```java
 public class Order {
@@ -250,7 +250,7 @@ public class Order {
 ![tests results](img/test2.jpg)
 
 **e)** Dodano poszczególne testy do **OrderTest**:  
-* **getMultipleProdutFromOrder** -sprawdza, czy rzeczywiście przekazane **List Product** określoną dlugość.
+* **getMultipleProdutFromOrder** - sprawdza, czy rzeczywiście przekazane **List Product** określoną długość.
 ```java
 @Test
 public void getMultipleProductFromOrder() {
@@ -267,7 +267,7 @@ public void getMultipleProductFromOrder() {
 	assertEquals(order.getProducts().size(), order.getProducts().size());
 }
 ```
-* **productsListIsNull** -sprawdza, czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista mieści product, jaki jest **null**-em.
+* **productsListIsNull** - sprawdza, czy przy tworzeniu **Order** wrzuca wyjątek, jeżeli przekazana lista mieści product, jaki jest **null**-em.
 ```java
 @Test
 public void listProductIsNull() {
@@ -303,7 +303,7 @@ public Order(List<Product> products) {
 
 #### Krok 3. Dodanie możliwości dodawania rabatu do produktu i całego zamówienia:
 
-**a)** Został dodany atrybut _discount_ do klasy **Product** odpowiednie _Gettery_ i _Settery_ oraz funkcja _getPriceDiscount()_
+**a)** Został dodany atrybut _discount_ do klasy **Product** odpowiednie _Gettery_ i _Settery_ oraz funkcja getPriceWithDiscount()_
 ```java 
 public class Product {
 
@@ -337,10 +337,9 @@ public class Product {
 }
 ```
 
-**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian.
-Dodane testy:
-* _getProductDiscount_- sprawdza poprawność przypisania zniżki.
-* _getProductWithDiscount()_- sprawdza poprawność wyliczonej ceny z rabatem.
+**b)** Zostały dopasowane testy do wprowadzonych powyżej zmian oraz zostały dodane nowe:
+* _getProductDiscount_ - sprawdza poprawność przypisania zniżki.
+* _getProductWithDiscount()_ - sprawdza poprawność wyliczonej ceny z rabatem.
 ```java
 public class ProductTest {
     private static final String NAME = "Mr. Sparkle";
@@ -394,16 +393,16 @@ public class ProductTest {
 }
 ```
 
-**c)** Po uruchomieniu wszystkich testów **ProductTest**  
+**c)** Po uruchomieniu wszystkich testów **ProductTest**
 
 ![tests results](img/test3.jpg)
 
 **d)**  
-1. Został dodany atrybut _discount_ do klasy **Order** odpowiednie _Gettery_ i _Settery_ oraz funkcji  
-* _getPriceWithDiscount()_- oblicza wartość zamówienia z zniżką  
-* _getPriceWithProductDiscount()_- oblicza wartość zamówienia z zniżką na poszczególne produkty  
-2. Zmieniono funkcje
-* _getPriceWithTaxes()_- oblicza wartość zamównie ze zniżką i podatkiem. 
+Został dodany atrybut _discount_ do klasy **Order**, odpowiednie _Gettery_ i _Settery_ oraz funkcji
+* _getPriceWithDiscount()_- oblicza wartość zamówienia ze zniżką
+* _getPriceWithProductDiscount()_- oblicza wartość zamówienia ze zniżką na poszczególne produkty
+Oraz zmieniono funkcje
+* _getPriceWithTaxes()_- oblicza wartość zamówienia ze zniżką i podatkiem.  
 
 ```java
 public class Order {
@@ -526,7 +525,7 @@ public void setDiscount() throws Exception {
 }
 ```
 
-* **getDiscountWithoutSetting** - sprawdza poprawność zwracanego rabatu bez jego wcześniejszego przypisania
+* **getDiscountWithoutSetting** - sprawdza poprawność zwracanego rabatu bez jego wcześniejszego przypisania.
 ```java
 @Test
 public void getDiscountWithoutSetting() throws Exception {
@@ -540,7 +539,7 @@ public void getDiscountWithoutSetting() throws Exception {
 }
 ```
 
-* **getPriceWithProductDiscount**- sprawdza poprawność obliczenia sumy poszczegółnych produktów z zniżką
+* **getPriceWithProductDiscount** - sprawdza poprawność obliczenia sumy poszczególnych produktów ze zniżką.
 ```java
 @Test
 public void getPriceWithProductDiscount() {
@@ -561,7 +560,7 @@ public void getPriceWithProductDiscount() {
 }
 ```
 
-* **getPriceWithTaxes**- sprawdza poprawność obliczenia sumy zamówięnia z zniżką i podatkiem.
+* **getPriceWithTaxes** - sprawdza poprawność obliczenia sumy zamówienia ze zniżką i podatkiem.
 ```java
 @Test
 public void getPriceWithTaxes() {
@@ -574,7 +573,7 @@ public void getPriceWithTaxes() {
 }
 ```
 
-* **getPriceWithMultiplyProducts**- sprawdza czy zwrucona suma dla dwóch produktów jest poprawna.
+* **getPriceWithMultiplyProducts** - sprawdza, czy zwrócona suma dla dwóch produktów jest poprawna.
 ```java 
 @Test
 public void getPriceWithMultiplyProducts(){
@@ -598,7 +597,7 @@ public void getPriceWithMultiplyProducts(){
 
 ![tests results](img/test3-1.jpg)
 
-#### Krok 4. Dodanie historii zamówień:  
+#### Krok 4. Dodanie historii zamówień:
 
 **a)** Został stworzony interfejs **SearchStrategy**
 ```java
@@ -610,8 +609,7 @@ public interface SearchStrategy {
 **b)** Następnie została stworzona klasa **ProductNameSearchStrategy**, która implementuje interfejs **SearchStrategy** i realizuję zadaną logikę filtrowania.
 ```java
 public class ProductNameSearchStrategy implements SearchStrategy {
-
-    String name;
+    private String name;
 
     public ProductNameSearchStrategy(String name) {
         this.name = name;
@@ -620,7 +618,11 @@ public class ProductNameSearchStrategy implements SearchStrategy {
     @Override
     public boolean filter(Order order) {
         List<Product> products = order.getProducts();
-        for (Product p : products) if (p.getName() == this.name) return true;
+        for (Product product: products) {
+            if (product.getName().equals(this.name)) {
+                return true;
+            }
+        }
         return false;
     }
 }
@@ -637,16 +639,15 @@ public class TotalPriceSearchStrategy implements SearchStrategy {
 
     @Override
     public boolean filter(Order order) {
-        System.out.println(order.getPriceWithTaxes());
         return order.getPriceWithTaxes().compareTo(this.price) == 0;
     }
 }
 ```
 
-**d)** i klasa **PayersSurnameSearchStrategy**
+**d)** W taki samy spośob zostałą dodana i klasa **PayersSurnameSearchStrategy**
 ```java
 public class PayersSurnameSearchStrategy implements SearchStrategy {
-    String payersSurname;
+    private String payersSurname;
 
     public PayersSurnameSearchStrategy(String payersSurname) {
         this.payersSurname = payersSurname;
@@ -654,7 +655,10 @@ public class PayersSurnameSearchStrategy implements SearchStrategy {
 
     @Override
     public boolean filter(Order order) {
-        return order.getOrdersPayerSurname()==this.payersSurname;
+        if (order.getOrdersPayerSurname() != null) {
+            return order.getOrdersPayerSurname().equals(this.payersSurname);
+        }
+        return false;
     }
 }
 ```
@@ -670,68 +674,471 @@ public class CompositeSearchStrategy implements SearchStrategy {
 
     @Override
     public boolean filter(Order order) {
-        return filters.stream().allMatch(f->f.filter(order));
+        return filters.stream().allMatch(f -> f.filter(order));
     }
 }
 ```
 
-**d)** Została stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień, a też otrzymania wszystkich zamówień w zależności od wybranego filtr (-ów).
+**f)** Została stworzona klasa **OrdersHistory** dla przechowywania wszystkich zrobionych zamówień, a też otrzymania wszystkich zamówień w zależności od wybranego filtr (-ów).
 ```java 
 public class OrdersHistory {
-
-
-    private List<Order> pastOrders;
+    private final List<Order> pastOrders;
 
     public OrdersHistory(List<Order> pastOrders) {
-        this.pastOrders = pastOrders;
+        this.pastOrders = Objects.requireNonNull(pastOrders, "pastOrders cannot be null");
+        this.pastOrders.forEach((p) -> Objects.requireNonNull(p,"order cannot be null"));
     }
-    public void addOrder(Order o){
-        this.pastOrders.add(o);
+
+    public void addOrder(Order order){
+        this.pastOrders.add(order);
     }
 
     public List<Order> getPastOrders() {
         return pastOrders;
     }
 
-    public void setPastOrders(List<Order> pastOrders) {
-        this.pastOrders = pastOrders;
-    }
-
-    public List<Order> getFilteredOrders(SearchStrategy searchStrategy){
-        List<Order> resultList=new ArrayList<>();
-        for(Order o:pastOrders) if(searchStrategy.filter(o)) resultList.add(o);
+    public List<Order> getFilteredOrders(SearchStrategy searchStrategy) {
+        List<Order> resultList = new ArrayList<>();
+        for (Order order: pastOrders) {
+            if (searchStrategy.filter(order)) {
+                resultList.add(order);
+            }
+        }
         return resultList;
     }
 }
 ```
 
-**d)** Została stworzona klasa **OrdersHistoryTest** dla testowana klasy **OrdersHistory**
+**g)** Została stworzona klasa **ProductNameSearchStrategyTest**, testująca klasę **ProductSearchStrategy** z metodami:
+* _getMockedOrder()_ - zwraca mockowany obiekt klasy **Order**
+* _existsInList()_ - sprawdza poprawność działania metody _filter()_ jeśli lista produktów zawiera produkt o podanej nazwie
+* notExistsInList()_ - sprawdza poprawność działania metody _filter()_ jeśli lista produktów zawiera produkt o podanej nazwie
+	
 ```java
-class OrdersHistoryTest {
-    private static final BigDecimal DISCOUNT = BigDecimal.valueOf(0);
+public class ProductNameSearchStrategyTest {
+    private Order getMockedOrder() {
+        Order order = mock(Order.class);
+        List<Product> productList = Arrays.asList(
+                new Product("Banana", BigDecimal.valueOf(43.05), BigDecimal.valueOf(0.5)),
+                new Product("Orange", BigDecimal.valueOf(54.83), BigDecimal.valueOf(0.23))
+        );
+        given(order.getProducts()).willReturn(productList);
+        return order;
+    }
+
     @Test
-    void getFilteredOrders() {
-        //given
-        Product p=new Product("Apple", BigDecimal.valueOf(250),DISCOUNT);
-        Product p1=new Product("Egg", BigDecimal.valueOf(200),DISCOUNT);
-        Product p2=new Product("Milk", BigDecimal.valueOf(350),DISCOUNT);
-        Product p3=new Product("Water", BigDecimal.valueOf(200),DISCOUNT);
+    public void existsInList() {
+        // given
+        Order order = getMockedOrder();
 
-        Order order=new Order(Arrays.asList(p,p1,p2,p3),DISCOUNT,"Trishch");
-        Order order1=new Order(Arrays.asList(p,p2),DISCOUNT,"Tumilovich");
-        Order order2=new Order(Arrays.asList(p3,p1),DISCOUNT,"Trishch");
+        // when
+        ProductNameSearchStrategy searchStrategy = new ProductNameSearchStrategy("Banana");
 
-        SearchStrategy s=new ProductNameSearchStrategy("Apple");
-        SearchStrategy s1=new PayersSurnameSearchStrategy("Trishch");
-        SearchStrategy s2=new TotalPriceSearchStrategy(BigDecimal.valueOf(738));
+        // then
+        assertTrue(searchStrategy.filter(order));
+    }
 
-        CompositeSearchStrategy cs=new CompositeSearchStrategy(Arrays.asList(s,s1));
-        OrdersHistory oh=new OrdersHistory(Arrays.asList(order,order1,order2));
-        //when
-        assertEquals(oh.getFilteredOrders(cs).size(),1);
-        assertEquals(oh.getFilteredOrders(s).size(),2);
-        assertEquals(oh.getFilteredOrders(s2).size(),1);
+    @Test
+    public void notExistsInList() {
+        // given
+        Order order = getMockedOrder();
 
+        // when
+        ProductNameSearchStrategy searchStrategy = new ProductNameSearchStrategy("Apple");
+
+        // then
+        assertFalse(searchStrategy.filter(order));
     }
 }
 ```
+
+Po uruchomieniu wszystkich testów **ProductNameSearchStrategyTest**  
+
+![tests results](img/test4-1.jpg)
+
+**h)** Została stworzona klasa **PayersSurnameSearchStrategyTest**, testująca klasę **PayersSurnameSearchStrategy** z metodami:
+* _samePayerSurname()_ - sprawdza poprawność działania metody _filter()_ jeśli nazwisko płatniku dopasuję się z podanym
+* _notSamePayerSurname()_ - sprawdza poprawność działania metody _filter()_ jeśli nazwisko płatniku nie dopasuję się z podanym
+* payersSurnameIsNull()_ - sprawdza poprawność działania metody _filter()_ jeśli pole nazwiska jest nulem
+	
+	
+```java
+public class PayersSurnameSearchStrategyTest {
+
+    @Test
+    public void samePayerSurname() {
+        // given
+        Order order = mock(Order.class);
+        given(order.getOrdersPayerSurname()).willReturn("Surname");
+
+        // when
+        PayersSurnameSearchStrategy searchStrategy = new PayersSurnameSearchStrategy("Surname");
+
+        // then
+        assertTrue(searchStrategy.filter(order));
+    }
+
+    @Test
+    public void notSamePayerSurname() {
+        // given
+        Order order = mock(Order.class);
+        given(order.getOrdersPayerSurname()).willReturn("notSurname");
+
+        // when
+        PayersSurnameSearchStrategy searchStrategy = new PayersSurnameSearchStrategy("Surname");
+
+        // then
+        assertFalse(searchStrategy.filter(order));
+    }
+
+    @Test
+    public void payersSurnameIsNull() {
+        // given
+        Order order = mock(Order.class);
+        given(order.getOrdersPayerSurname()).willReturn(null);
+
+        // when
+        PayersSurnameSearchStrategy searchStrategy = new PayersSurnameSearchStrategy("Surname");
+
+        // then
+        assertFalse(searchStrategy.filter(order));
+    }
+}
+```
+
+Po uruchomieniu wszystkich testów **PayersSurnameSearchStrategyTest**  
+
+![tests results](img/test4-2.jpg)
+
+**i)** Została stworzona klasa **TotalPriceSearchStrategyTest**, testująca klasę **TotalPriceSearchStrategy** z metodami:
+* _getMockedOrder()_ - zwraca mockowany obiekt klasy **Order**
+* _sameTotalPrice()_ - sprawdza poprawność działania metody _filter()_ jeśli total price dopasuję się z podanym
+* _notSameTotalPrice()_ - sprawdza poprawność działania metody _filter()_ jeśli total price nie dopasuję się z podanympodanym
+	
+	
+```java
+public class TotalPriceSearchStrategyTest {
+    private Order getMockedOrder() {
+        Order order = mock(Order.class);
+        given(order.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(10));
+        return order;
+    }
+
+    @Test
+    public void sameTotalPrice() {
+        // given
+        Order order = getMockedOrder();
+
+        // when
+        TotalPriceSearchStrategy searchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(10));
+
+        // then
+        assertTrue(searchStrategy.filter(order));
+    }
+
+    @Test
+    public void notSameTotalPrice() {
+        // given
+        Order order = getMockedOrder();
+
+        // when
+        TotalPriceSearchStrategy searchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(9));
+
+        // then
+        assertFalse(searchStrategy.filter(order));
+    }
+}
+```
+
+Po uruchomieniu wszystkich testów **TotalPriceSearchStrategyTest**  
+
+![tests results](img/test4-3.jpg)
+
+**j)** Została stworzona klasa **CompositeSearchStrategyTest**, testująca klasę **CompositeSearchStrategy** z metodami:
+* _getMockedOrder()_ - zwraca mockowany obiekt klasy **Order**
+* _sameAllParameters()_ - sprawdza poprawność działania metody _filter()_ jeśli wszystkie dane dopasują się z podanymi
+* _sameAllParametersNotProductName()_ - sprawdza poprawność działania metody _filter()_ jeśli wszystkie dane dopasują się z podanymi się z podanympodanym oprócz nazw produktów
+* _sameAllParametersNotPayersSurname()_ - sprawdza poprawność działania metody _filter()_ jeśli wszystkie dane dopasują się z podanymi się z podanympodanym oprócz nazwiska płatnika
+* _sameAllParametersNotTotalPrice()_ - sprawdza poprawność działania metody _filter()_ jeśli wszystkie dane dopasują się z podanymi się z podanympodanym oprócz total price
+	
+	
+```java
+public class CompositeSearchStrategyTest {
+    private Order getMockedOrder() {
+        Order order = mock(Order.class);
+        List<Product> productList = Arrays.asList(
+                new Product("Banana", BigDecimal.valueOf(43.05), BigDecimal.valueOf(0.5)),
+                new Product("Orange", BigDecimal.valueOf(54.83), BigDecimal.valueOf(0.23))
+        );
+        given(order.getProducts()).willReturn(productList);
+        given(order.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(10));
+        given(order.getOrdersPayerSurname()).willReturn("Surname");
+        return order;
+    }
+
+    @Test
+    public void sameAllParameters() {
+        // given
+        Order order = getMockedOrder();
+        SearchStrategy productNameSearchStrategy = new ProductNameSearchStrategy("Banana");
+        SearchStrategy payersSurnameSearchStrategy = new PayersSurnameSearchStrategy("Surname");
+        SearchStrategy totalPriceSearchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(10));
+
+        // when
+        CompositeSearchStrategy searchStrategy = new CompositeSearchStrategy(
+                Arrays.asList(productNameSearchStrategy, payersSurnameSearchStrategy, totalPriceSearchStrategy));
+
+        // then
+        assertTrue(searchStrategy.filter(order));
+    }
+
+    @Test
+    public void sameAllParametersNotProductName() {
+        // given
+        Order order = getMockedOrder();
+        SearchStrategy productNameSearchStrategy = new ProductNameSearchStrategy("Apple");
+        SearchStrategy payersSurnameSearchStrategy = new PayersSurnameSearchStrategy("Surname");
+        SearchStrategy totalPriceSearchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(10));
+
+        // when
+        CompositeSearchStrategy searchStrategy = new CompositeSearchStrategy(
+                Arrays.asList(productNameSearchStrategy, payersSurnameSearchStrategy, totalPriceSearchStrategy));
+
+        // then
+        assertFalse(searchStrategy.filter(order));
+    }
+
+    @Test
+    public void sameAllParametersNotPayersSurname() {
+        // given
+        Order order = getMockedOrder();
+        SearchStrategy productNameSearchStrategy = new ProductNameSearchStrategy("Orange");
+        SearchStrategy payersSurnameSearchStrategy = new PayersSurnameSearchStrategy("notSurname");
+        SearchStrategy totalPriceSearchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(10));
+
+        // when
+        CompositeSearchStrategy searchStrategy = new CompositeSearchStrategy(
+                Arrays.asList(productNameSearchStrategy, payersSurnameSearchStrategy, totalPriceSearchStrategy));
+
+        // then
+        assertFalse(searchStrategy.filter(order));
+    }
+
+    @Test
+    public void sameAllParametersNotTotalPrice() {
+        // given
+        Order order = getMockedOrder();
+        SearchStrategy productNameSearchStrategy = new ProductNameSearchStrategy("Orange");
+        SearchStrategy payersSurnameSearchStrategy = new PayersSurnameSearchStrategy("Surname");
+        SearchStrategy totalPriceSearchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(9));
+
+        // when
+        CompositeSearchStrategy searchStrategy = new CompositeSearchStrategy(
+                Arrays.asList(productNameSearchStrategy, payersSurnameSearchStrategy, totalPriceSearchStrategy));
+
+        // then
+        assertFalse(searchStrategy.filter(order));
+    }
+}
+```
+
+Po uruchomieniu wszystkich testów **CompositeSearchStrategyTest**  
+
+![tests results](img/test4-4.jpg)
+
+**k)** Została stworzona klasa **OrdersHistoryTest**, testująca klasę **OrdersHistory** z metodami:
+* _getMultipleOrdersFromOrdersHistory()_ - sprawdza poprawność działania metody _getPastOrders()_
+* _getPastOrdersWithAddingOrders()_ - sprawdza poprawność działania metody _addOrder()_
+* _pastPastOrdersListIsNull()_ - sprawdza warunek przekazywanie nula podczas tworzenia obiektu klasy
+* _listPastOrdersIsNull()_ - sprawdza warunek przekazywanie listy z zawartym nulem podczas tworzenia obiektu klasy
+* _getFilteredOrdersWithProductName()_ - sprawdza działanie metody _getFilteredOrders()_ przy sortowaniu po nazwie produktu
+* _getFilteredOrdersWithPayersSurname()_ - sprawdza działanie metody _getFilteredOrders()_ przy sortowaniu po nazwisku płatniku
+* _getFilteredOrdersWithTotalPrice()_ - sprawdza działanie metody _getFilteredOrders()_ przy sortowaniu po total price
+* _getCompositeFilteredOrders()_ - sprawdza działanie metody _getFilteredOrders()_ przy sortowaniu po wszystkich polach
+* _searchStrategyIsNull()_ - sprawdza warunek przekazywanie nula podczas uruchomienia metody _getFilteredOrders()_
+```java
+public class OrdersHistoryTest {
+    @Test
+    void getMultipleOrdersFromOrdersHistory() {
+        // given
+        List<Order> orders = Arrays.asList(mock(Order.class), mock(Order.class));
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(orders);
+
+        // then
+        assertEquals(2, ordersHistory.getPastOrders().size());
+        assertSame(orders.get(0), ordersHistory.getPastOrders().get(0));
+        assertSame(orders.get(1), ordersHistory.getPastOrders().get(1));
+    }
+
+    @Test
+    void getPastOrdersWithAddingOrders() {
+        // given
+        Order expectedOrder = mock(Order.class);
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(new ArrayList<>());
+        ordersHistory.addOrder(expectedOrder);
+
+        // then
+        assertEquals(1, ordersHistory.getPastOrders().size());
+        assertSame(expectedOrder, ordersHistory.getPastOrders().get(0));
+    }
+
+    @Test
+    public void pastPastOrdersListIsNull() {
+        // when then
+        assertThrows(NullPointerException.class, () -> new OrdersHistory(null));
+    }
+
+    @Test
+    public void listPastOrdersIsNull() {
+        // given
+        List<Order> pastOrders = Arrays.asList(mock(Order.class), null);
+
+        // when then
+        assertThrows(NullPointerException.class, () -> new OrdersHistory(pastOrders));
+    }
+
+    @Test
+    void getFilteredOrdersWithProductName() {
+        // given
+        Product product = mock(Product.class);
+        Product product1 = mock(Product.class);
+        Product product2 = mock(Product.class);
+        Product product3 = mock(Product.class);
+
+        given(product.getName()).willReturn("Apple");
+        given(product1.getName()).willReturn("Banana");
+        given(product2.getName()).willReturn("Orange");
+        given(product3.getName()).willReturn("Lemon");
+
+        Order order = mock(Order.class);
+        Order order1 = mock(Order.class);
+        Order order2 = mock(Order.class);
+
+        given(order.getProducts()).willReturn(Arrays.asList(product, product1));
+        given(order1.getProducts()).willReturn(Arrays.asList(product1, product3));
+        given(order2.getProducts()).willReturn(Arrays.asList(product, product1, product2, product3));
+
+        SearchStrategy searchStrategy = new ProductNameSearchStrategy("Apple");
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(Arrays.asList(order, order1, order2));
+
+        // then
+        assertEquals(2, ordersHistory.getFilteredOrders(searchStrategy).size());
+        assertSame(order, ordersHistory.getFilteredOrders(searchStrategy).get(0));
+        assertSame(order2, ordersHistory.getFilteredOrders(searchStrategy).get(1));
+    }
+
+    @Test
+    void getFilteredOrdersWithPayersSurname() {
+        // given
+        Order order = mock(Order.class);
+        Order order1 = mock(Order.class);
+        Order order2 = mock(Order.class);
+
+        given(order.getOrdersPayerSurname()).willReturn("Surname1");
+        given(order1.getOrdersPayerSurname()).willReturn("Surname2");
+        given(order2.getOrdersPayerSurname()).willReturn("Surname1");
+
+        SearchStrategy searchStrategy = new PayersSurnameSearchStrategy("Surname1");
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(Arrays.asList(order, order1, order2));
+
+        // then
+        assertEquals(2, ordersHistory.getFilteredOrders(searchStrategy).size());
+        assertSame(order, ordersHistory.getFilteredOrders(searchStrategy).get(0));
+        assertSame(order2, ordersHistory.getFilteredOrders(searchStrategy).get(1));
+    }
+
+    @Test
+    void getFilteredOrdersWithTotalPrice() {
+        // given
+        Order order = mock(Order.class);
+        Order order1 = mock(Order.class);
+        Order order2 = mock(Order.class);
+
+        given(order.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(10));
+        given(order1.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(20));
+        given(order2.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(10));
+
+        SearchStrategy searchStrategy = new TotalPriceSearchStrategy(BigDecimal.valueOf(10));
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(Arrays.asList(order, order1, order2));
+
+        // then
+        assertEquals(2, ordersHistory.getFilteredOrders(searchStrategy).size());
+        assertSame(order, ordersHistory.getFilteredOrders(searchStrategy).get(0));
+        assertSame(order2, ordersHistory.getFilteredOrders(searchStrategy).get(1));
+    }
+
+    @Test
+    void getCompositeFilteredOrders() {
+        // given
+        Product product = mock(Product.class);
+        Product product1 = mock(Product.class);
+        Product product2 = mock(Product.class);
+        Product product3 = mock(Product.class);
+
+        given(product.getName()).willReturn("Apple");
+        given(product1.getName()).willReturn("Banana");
+        given(product2.getName()).willReturn("Orange");
+        given(product3.getName()).willReturn("Lemon");
+
+        Order order = mock(Order.class);
+        Order order1 = mock(Order.class);
+        Order order2 = mock(Order.class);
+
+        given(order.getProducts()).willReturn(Arrays.asList(product, product1, product3));
+        given(order1.getProducts()).willReturn(Arrays.asList(product1, product3));
+        given(order2.getProducts()).willReturn(Arrays.asList(product, product1, product2, product3));
+
+        given(order.getOrdersPayerSurname()).willReturn("Surname1");
+        given(order1.getOrdersPayerSurname()).willReturn("Surname2");
+        given(order2.getOrdersPayerSurname()).willReturn("Surname1");
+
+        given(order.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(20));
+        given(order1.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(10));
+        given(order2.getPriceWithTaxes()).willReturn(BigDecimal.valueOf(10));
+
+        SearchStrategy searchStrategy = new CompositeSearchStrategy(Arrays.asList(
+                new ProductNameSearchStrategy("Lemon"),
+                new PayersSurnameSearchStrategy("Surname1"),
+                new TotalPriceSearchStrategy(BigDecimal.valueOf(10))
+        ));
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(Arrays.asList(order, order1, order2));
+
+        // then
+        assertEquals(1, ordersHistory.getFilteredOrders(searchStrategy).size());
+        assertSame(order2, ordersHistory.getFilteredOrders(searchStrategy).get(0));
+    }
+
+    @Test
+    public void searchStrategyIsNull() {
+        // given
+
+        // when
+        OrdersHistory ordersHistory = new OrdersHistory(Arrays.asList(mock(Order.class), mock(Order.class)));
+
+        // then
+        assertThrows(NullPointerException.class, () -> ordersHistory.getFilteredOrders(null));
+    }
+}
+```
+
+Po uruchomieniu wszystkich testów **OrdersHistory**  
+
+![tests results](img/test4-5.jpg)
+
+
+**l)** Po uruchomieniu wszystkich testów
+
+![tests results](img/test4-6.jpg)
+
